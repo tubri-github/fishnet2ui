@@ -3,7 +3,6 @@
     <img src="@/assets/fn2logo.png" alt="Logo" class="logo"/> <!-- 假设你有logo图片 -->
     <nav>
       <router-link to="/">Search</router-link>
-      <router-link to="/advanced-search">Join FishNet</router-link>
       <a>Join FishNet</a>
       <a>Contact Us</a>
       <a>Services</a>

@@ -4,7 +4,7 @@
       <search-box @search="toggleSelectedList"/>
     </div>
     <div class="map-area">
-      <leaflet-map-component ref="map"/>
+      <leaflet-map-component ref="map" :selectedItems="items"/>
 
       <transition name="slide-up">
         <selected-list
@@ -54,7 +54,10 @@ export default {
           BasisOfRecord: "Voucher",
           Remarks: "Publication:maret,t.r. And E.j. Peters. 1980. The Fishes Of Salt Creek Basin, Nebraska. Transactions Of The Nebraska Academy Of Sciences. Viii: 35-54.",
           DateLastModified: "2006-04-25T",
-          status:"active"
+          status:"active",
+          Latitude: 40.09478,
+          Longitude: -99.43253
+
         },
         {
           InstitutionCode: "UNSM",
@@ -72,7 +75,9 @@ export default {
           BasisOfRecord: "Voucher",
           Remarks: "Mormon Island Fish Inventory",
           DateLastModified: "2006-04-25T",
-          status:"active"
+          status:"active",
+          Latitude: 40.06816,
+          Longitude: -99.37672
         },
         {
           InstitutionCode: "UNSM",
@@ -95,7 +100,8 @@ export default {
           BasisOfRecord: "Voucher",
           Remarks: "Identified By Bob Hrabik 02 Aug 1984",
           DateLastModified: "2006-04-25T",
-          status:"closed"
+          status:"closed",
+
         },
         {
           InstitutionCode: "UNSM",
@@ -113,7 +119,9 @@ export default {
           Collector: "Lynch, J.D.",
           BasisOfRecord: "Voucher",
           DateLastModified: "2006-04-25T",
-          status:"active"
+          status:"active",
+          Latitude: 40.28672,
+          Longitude: -99.84347
         },
         {
           InstitutionCode: "UNSM",
@@ -132,7 +140,9 @@ export default {
           BasisOfRecord: "Voucher",
           Remarks: "Note: Notropis Percobromus= N. Atherinoides",
           DateLastModified: "2006-04-25T",
-          status:"reforming"
+          status:"reforming",
+          Latitude: 40.24452,
+          Longitude: -99.70591
         },
         {
           InstitutionCode: "UNSM",
@@ -152,7 +162,9 @@ export default {
           BasisOfRecord: "Voucher",
           Remarks: "Bliss, Q. And S. Schainost. 1973. Nebraska Stream Inventory Reports. Nebraska Game And Parks Commission Wildlife Services, Aquatic Wildlife Division, Lincoln. Ne, 68503.",
           DateLastModified: "2006-04-25T",
-          status:"active"
+          status:"active",
+          Latitude: 40.25511,
+          Longitude: -100.1205
         },
         {
           InstitutionCode: "UNSM",
@@ -165,7 +177,9 @@ export default {
           StateProvince: "Nebraska",
           County: "Nemaha",
           DateLastModified: "2006-04-25T",
-          status:"active"
+          status:"active",
+          Latitude: 40.11145,
+          Longitude: -99.48468
         },
       {
         InstitutionCode: "UNSM",
@@ -178,7 +192,9 @@ export default {
         StateProvince: "Nebraska",
         County: "Nemaha",
         DateLastModified: "2006-04-25T",
-        status:"active"
+        status:"active",
+        Latitude: 40.09478,
+        Longitude: -99.43253
       },
       {
         InstitutionCode: "UNSM",
@@ -191,7 +207,9 @@ export default {
         StateProvince: "Nebraska",
         County: "Nemaha",
         DateLastModified: "2006-04-25T",
-        status:"active"
+        status:"active",
+        Latitude: 40.22732,
+        Longitude: -100.38391
       },
       {
         InstitutionCode: "UNSM",
@@ -204,8 +222,229 @@ export default {
         StateProvince: "Nebraska",
         County: "Nemaha",
         DateLastModified: "2006-04-25T",
-        status:"active"
-      }
+        status:"active",
+        Latitude: 40.06816,
+        Longitude: -99.37672
+      },
+      {
+        InstitutionCode: "UNSM",
+        CollectionCode: "Fish",
+        CatalogNumber: "24814",
+        ScientificName: "Notropis atherinoides",
+        Family: "Cyprinidae",
+        PreparationType: "Alcoholic",
+        Country: "U.S.A.",
+        StateProvince: "Nebraska",
+        County: "Nemaha",
+        DateLastModified: "2006-04-25T",
+        status:"active",
+        Latitude: 40.0094,
+        Longitude: -98.05828
+      },
+      {
+        InstitutionCode: "UNSM",
+        CollectionCode: "Fish",
+        CatalogNumber: "24811",
+        ScientificName: "Notropis atherinoides",
+        Family: "Cyprinidae",
+        PreparationType: "Alcoholic",
+        Country: "U.S.A.",
+        StateProvince: "Nebraska",
+        County: "Nemaha",
+        DateLastModified: "2006-04-25T",
+        status:"active",
+        Latitude: 40.06918,
+        Longitude: -98.37672
+      },
+      {
+        InstitutionCode: "UNSM",
+        CollectionCode: "Fish",
+        CatalogNumber: "24819",
+        ScientificName: "Notropis atherinoides",
+        Family: "Cyprinidae",
+        PreparationType: "Alcoholic",
+        Country: "U.S.A.",
+        StateProvince: "Nebraska",
+        County: "Nemaha",
+        DateLastModified: "2006-04-25T",
+        status:"active",
+        Latitude: 40.09478,
+        Longitude: -99.43253
+      },
+      {
+        InstitutionCode: "UNSM",
+        CollectionCode: "Fish",
+        CatalogNumber: "24812",
+        ScientificName: "Notropis atherinoides",
+        Family: "Cyprinidae",
+        PreparationType: "Alcoholic",
+        Country: "U.S.A.",
+        StateProvince: "Nebraska",
+        County: "Nemaha",
+        DateLastModified: "2006-04-25T",
+        status:"active",
+        Latitude: 40.22732,
+        Longitude: -100.38391
+      },
+      {
+        InstitutionCode: "UNSM",
+        CollectionCode: "Fish",
+        CatalogNumber: "24813",
+        ScientificName: "Notropis atherinoides",
+        Family: "Cyprinidae",
+        PreparationType: "Alcoholic",
+        Country: "U.S.A.",
+        StateProvince: "Nebraska",
+        County: "Nemaha",
+        DateLastModified: "2006-04-25T",
+        status:"active",
+        Latitude: 40.22732,
+        Longitude: -100.38391
+      },
+      {
+        InstitutionCode: "UNSM",
+        CollectionCode: "Fish",
+        CatalogNumber: "773",
+        ScientificName: "Notropis atherinoides",
+        Family: "Cyprinidae",
+        PreparationType: "Alcoholic",
+        Country: "U.S.A.",
+        StateProvince: "Nebraska",
+        County: "Saunders",
+        Locality: "Salt Creek At Ashland; T12N,R9E,S1, W1/2; Salt Creek",
+        YearCollected: 1977,
+        MonthCollected: 10,
+        DayCollected: 19,
+        Collector: "Peters, E.J.; Maret, T.",
+        BasisOfRecord: "Voucher",
+        Remarks: "Publication:maret,t.r. And E.j. Peters. 1980. The Fishes Of Salt Creek Basin, Nebraska. Transactions Of The Nebraska Academy Of Sciences. Viii: 35-54.",
+        DateLastModified: "2006-04-25T",
+        status:"active",
+        Latitude: 40.22732,
+        Longitude: -100.38391
+      },
+      {
+        InstitutionCode: "UNSM",
+        CollectionCode: "Fish",
+        CatalogNumber: "785",
+        ScientificName: "Notropis atherinoides",
+        Family: "Cyprinidae",
+        PreparationType: "Alcoholic",
+        Country: "U.S.A.",
+        StateProvince: "Nebraska",
+        County: "Hall",
+        Locality: "Platte River At Mormon Island; Middle Platte River",
+        YearCollected: 1980,
+        Collector: "Cochnar, J.; Jenson, D.",
+        BasisOfRecord: "Voucher",
+        Remarks: "Mormon Island Fish Inventory",
+        DateLastModified: "2006-04-25T",
+        status:"active",
+        Latitude: 40.22732,
+        Longitude: -100.38391
+      },
+      {
+        InstitutionCode: "UNSM",
+        CollectionCode: "Fish",
+        CatalogNumber: "7920",
+        IndividualCount: 4,
+        ScientificName: "Notropis atherinoides",
+        Family: "Cyprinidae",
+        PreparationType: "Alcoholic",
+        Latitude: 42.92198,
+        Longitude: -98.40169,
+        CoordinateUncertaintyInMeters: 4000,
+        Country: "U.S.A.",
+        StateProvince: "Nebraska",
+        County: "Boyd",
+        Locality: "Missouri River At Sunshine Bottoms, N. of Lynch, NE; Missouri River",
+        YearCollected: 1976,
+        MonthCollected: 8,
+        Collector: "Peters, E.J.; Fiet, D.",
+        BasisOfRecord: "Voucher",
+        Remarks: "Identified By Bob Hrabik 02 Aug 1984",
+        DateLastModified: "2006-04-25T",
+        status:"closed",
+
+      },
+      {
+        InstitutionCode: "UNSM",
+        CollectionCode: "Fish",
+        CatalogNumber: "8011",
+        ScientificName: "Notropis atherinoides",
+        Family: "Cyprinidae",
+        PreparationType: "Alcoholic",
+        Country: "U.S.A.",
+        StateProvince: "Nebraska",
+        County: "Cass",
+        Locality: "Platte River At Louisville; T12N,R11E; Lower Platte River",
+        YearCollected: 1973,
+        MonthCollected: 7,
+        Collector: "Lynch, J.D.",
+        BasisOfRecord: "Voucher",
+        DateLastModified: "2006-04-25T",
+        status:"active",
+        Latitude: 40.22732,
+        Longitude: -100.38391
+      },
+      {
+        InstitutionCode: "UNSM",
+        CollectionCode: "Fish",
+        CatalogNumber: "813",
+        ScientificName: "Notropis atherinoides",
+        Family: "Cyprinidae",
+        PreparationType: "Alcoholic",
+        Country: "U.S.A.",
+        StateProvince: "Oklahoma",
+        Locality: "Salt Fork Of Arkansas River",
+        YearCollected: 1939,
+        MonthCollected: 8,
+        DayCollected: 24,
+        Collector: "Moore, G.A.; Class",
+        BasisOfRecord: "Voucher",
+        Remarks: "Note: Notropis Percobromus= N. Atherinoides",
+        DateLastModified: "2006-04-25T",
+        status:"reforming",
+        Latitude: 40.22732,
+        Longitude: -100.38391
+      },
+      {
+        InstitutionCode: "UNSM",
+        CollectionCode: "Fish",
+        CatalogNumber: "2476",
+        ScientificName: "Notropis atherinoides",
+        Family: "Cyprinidae",
+        PreparationType: "Alcoholic",
+        Country: "U.S.A.",
+        StateProvince: "Nebraska",
+        County: "Nemaha",
+        Locality: "Little Nemaha River; T5N,R14E,S9,SE1/4; Little Nemaha River",
+        YearCollected: 1973,
+        MonthCollected: 8,
+        DayCollected: 28,
+        Collector: "Schainost, S.; Kucera, P.",
+        BasisOfRecord: "Voucher",
+        Remarks: "Bliss, Q. And S. Schainost. 1973. Nebraska Stream Inventory Reports. Nebraska Game And Parks Commission Wildlife Services, Aquatic Wildlife Division, Lincoln. Ne, 68503.",
+        DateLastModified: "2006-04-25T",
+        status:"active",
+        Latitude: 40.22732,
+        Longitude: -100.38391
+      },
+      {
+        InstitutionCode: "UNSM",
+        CollectionCode: "Fish",
+        CatalogNumber: "24815",
+        ScientificName: "Notropis atherinoides",
+        Family: "Cyprinidae",
+        PreparationType: "Alcoholic",
+        Country: "U.S.A.",
+        StateProvince: "Nebraska",
+        County: "Nemaha",
+        DateLastModified: "2006-04-25T",
+        status:"active",
+        Latitude: 40.22732,
+        Longitude: -100.38391
+      },
     ]);
     const showSelectedList = ref(false);
 

@@ -34,7 +34,8 @@
         <th>Country</th>
         <th>StateProvince</th>
         <th>Locality</th>
-        <th>DateCollected</th>
+        <th>Latitude</th>
+        <th>Longitude</th>
       </tr>
       </thead>
       <tbody>
@@ -50,7 +51,9 @@
         <td>{{ item.Country }}</td>
         <td>{{ item.StateProvince }}</td>
         <td>{{ item.Locality }}</td>
-        <td>{{ item.YearCollected }} - {{ item.MonthCollected }} - {{ item.DayCollected }}</td>
+        <td>{{ item.Latitude }}</td>
+        <td>{{ item.Longitude }}</td>
+
       </tr>
       </tbody>
     </table>
@@ -110,8 +113,6 @@ export default defineComponent({
 <style scoped>
 
 .selected-list-container {
-  max-width: 100%;
-  overflow-x: auto;
   position: absolute;
   bottom: 0;
   left: 0;
@@ -169,6 +170,10 @@ export default defineComponent({
 }
 .selected-list-table thead {
   background-color: #f8f9fa;
+}
+.selected-list-table tbody {
+   max-width: 100%;
+   overflow-x: auto;
 }
 .selected-list-table th,
 .selected-list-table td {
