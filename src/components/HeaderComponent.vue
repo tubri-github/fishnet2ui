@@ -3,19 +3,20 @@
     <img src="@/assets/fn2logo.png" alt="Logo" class="logo"/> <!-- 假设你有logo图片 -->
     <nav>
       <router-link to="/">Search</router-link>
-      <a>Join FishNet</a>
+      <router-link to="/joinus">Join FishNet</router-link>
       <router-link to="/contact">Contact Us</router-link>
-      <a>Services</a>
+      <router-link to="/services">Services</router-link>
       <div @mouseover="showSubMenu = true" @mouseleave="showSubMenu = false" class="about-menu">
         <a>About</a>
         <div v-if="showSubMenu" class="submenu">
-          <a href="#">Fishnet 2</a>
-          <a href="#">Data Policies</a>
-          <a href="#">Funding</a>
+          <router-link to="/about">Fishnet 2</router-link>
+          <router-link to="/datapolicy">Data Policies</router-link>
+          <router-link to="/funding">Funding</router-link>
           <a href="#">Partner Institutions</a>
         </div>
       </div>
-      <a>Georeferencing</a>
+      <router-link to="/georef">Georeferencing</router-link>
+
     </nav>
   </header>
 </template>

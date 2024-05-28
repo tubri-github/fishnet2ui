@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="showModal" title="Fishnet2 Data Use Agreement" width="50%">
+  <el-dialog v-model="showModal" title="Fishnet2 Data Use Agreement" width="50%" :before-close="handleClose">
       <h2>Fishnet2 Data Use Agreement</h2>
       <p>Fishnet2 Data-Use Statement</p>
       <p>This site provides open access to data housed in fish collections in natural history museums, universities and other institutions. The institutions providing data to this portal have entered into a data-sharing agreement with Fishnet2. Data are periodically downloaded from databases maintained by the providers and stored in a cache giving users rapid access to the records. The portal also provides users with special features for mapping and visualizing data records, and downloading data. By accepting the terms of the data-use agreement below, users of this data portal agree to abide by both the terms of this agreement, and the individual data-use policies of data providers (accessible through links to each of the data providers).</p>
@@ -27,11 +27,14 @@
 
 <script>
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
 export default {
   name: 'AgreementModal',
   setup() {
     const showModal = ref(true);
+    const router = useRouter();
+
 
     const acceptTerms = () => {
       localStorage.setItem('fishnet2-data-use-accepted', Date.now().toString());
@@ -39,7 +42,13 @@ export default {
     };
 
     const declineTerms = () => {
-      showModal.value = true; // 如果拒绝，保持显示弹框
+      showModal.value = false;
+      router.push({ name: 'AboutFishnet' });
+    };
+
+    const handleClose = (done) => {
+      router.push({ name: 'AboutFishnet' });
+      done();
     };
 
     onMounted(() => {
@@ -52,7 +61,8 @@ export default {
     return {
       showModal,
       acceptTerms,
-      declineTerms
+      declineTerms,
+      handleClose
     };
   }
 };

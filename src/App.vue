@@ -2,7 +2,7 @@
 <!--  <img alt="Vue logo" src="./assets/logo.png">-->
 <!--  <HelloWorld msg="Welcome to Your Vue.js App"/>-->
   <div id="app">
-    <agreement-modal></agreement-modal>
+
     <HeaderComponent></HeaderComponent>
     <router-view>
     </router-view>
@@ -11,12 +11,10 @@
 
 <script>
 import HeaderComponent from "@/components/HeaderComponent";
-import AgreementModal from "@/components/AgreementModel";
 
 export default {
   name: 'App',
   components: {
-    AgreementModal,
     HeaderComponent
   }
 }

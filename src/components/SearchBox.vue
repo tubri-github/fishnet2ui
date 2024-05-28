@@ -1,4 +1,5 @@
 <template>
+  <agreement-modal></agreement-modal>
   <div class="search-box">
     <form @submit.prevent="onSearch">
       <div class="input-group">
@@ -40,10 +41,14 @@
 
 <script>
 import { ref } from 'vue';
+import AgreementModal from "@/components/AgreementModel";
 
 export default {
   name: 'SearchBox',
   emits: ['search'],
+  components:{
+    AgreementModal
+  },
   methods:{
     search() {
       this.$emit('search');
