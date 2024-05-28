@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import MapPage from '../components/MapPage.vue';
 import AdvancedSearchPage from '../components/AdvancedSearchPage.vue';
+import ContactUS from "@/components/ContactUS";
 
 const routes = [
     {
@@ -12,6 +13,11 @@ const routes = [
         path: '/advanced-search',
         name: 'AdvancedSearchPage',
         component: AdvancedSearchPage,
+    },
+    {
+        path: '/contact',
+        name: 'ContactUS',
+        component: ContactUS,
     },
 ];
 
