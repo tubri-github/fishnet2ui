@@ -4,32 +4,32 @@
     <form @submit.prevent="onSearch">
       <div class="input-group">
         <label for="taxon">Taxon</label>
-        <input type="text" id="taxon" v-model="searchFields.taxon" />
+        <input type="text" id="taxon" v-model="searchFields.vtaxon" />
       </div>
 
       <div class="input-group">
         <label for="location">Location</label>
-        <input type="text" id="location" v-model="searchFields.location" />
+        <input type="text" id="location" v-model="searchFields.vlocation" />
       </div>
 
       <div class="input-group">
         <label for="code">Institution Code / Catalog Number</label>
-        <input type="text" id="code" v-model="searchFields.code" />
+        <input type="text" id="code" v-model="searchFields.vcatalognumber" />
       </div>
 
       <div class="input-group">
         <label for="dateRange">Date Range (yyyy-yyyy)</label>
-        <input type="text" id="dateRange" v-model="searchFields.dateRange" />
+        <input type="text" id="dateRange" v-model="searchFields.vdateRange" />
       </div>
 
       <div class="input-group">
         <label for="other">Other</label>
-        <input type="text" id="other" v-model="searchFields.other" />
+        <input type="text" id="other" v-model="searchFields.vother" />
       </div>
 
       <div class="input-group">
         <label for="polygon">Search Polygon</label>
-        <input type="text" id="polygon" v-model="searchFields.polygon" placeholder="Paste WKT or select from menu" />
+        <input type="text" id="polygon" v-model="searchFields.vpoly" placeholder="Paste WKT or select from menu" />
       </div>
 
       <div class="actions">
@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import AgreementModal from "@/components/AgreementModel";
 
 export default {
@@ -49,23 +49,34 @@ export default {
   components:{
     AgreementModal
   },
+  props: {
+    polygon: {
+      type: String,
+      default: ''
+    }
+  },
   methods:{
     search() {
-      this.$emit('search');
+      this.onSearch();
     },
   },
-  setup() {
+  setup(props, { emit }) {
     const searchFields = ref({
-      taxon: '',
-      location: '',
-      code: '',
-      dateRange: '',
-      other: '',
-      polygon: ''
+      vtaxon: '',
+      vlocation: '',
+      vcatalognumber: '',
+      vdateRange: '',
+      vother: '',
+      vpoly: props.polygon
+    });
+
+    watch(() => props.polygon, (newVal) => {
+      searchFields.value.vpoly = newVal;
     });
 
     function onSearch() {
       // Trigger the search logic here
+      emit('search', { ...searchFields.value });
       console.log(searchFields.value);
       // This is where you'd likely emit an event or invoke a store action
     }

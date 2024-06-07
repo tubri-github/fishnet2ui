@@ -16,47 +16,80 @@
       <div>
         <button  @click="togglePartialView"><font-awesome-icon icon="window-restore"/></button>
         <button @click="toggleFullView"><font-awesome-icon icon="expand-arrows-alt"/></button>
-        <button @click="close"><font-awesome-icon icon="times"/></button>
+        <button  @click="$emit('close')"><font-awesome-icon icon="times"/></button>
       </div>
 
     </div>
     <table class="selected-list-table">
-      <thead>
-      <tr>
-        <th></th>
-        <th>InstitutionCode</th>
-        <th>CollectionCode</th>
-        <th>CatalogNumber</th>
-        <th>ScientificName</th>
-        <th>Status</th>
-        <th>Family</th>
-        <th>PreparationType</th>
-        <th>Country</th>
-        <th>StateProvince</th>
-        <th>Locality</th>
-        <th>Latitude</th>
-        <th>Longitude</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr v-for="item in selectedItems" :key="item.CatalogNumber">
-        <td><input type="checkbox" :checked="item.selected" /></td>
-        <td>{{ item.InstitutionCode }}</td>
-        <td>{{ item.CollectionCode }}</td>
-        <td>{{ item.CatalogNumber }}</td>
-        <td>{{ item.ScientificName }}</td>
-        <td :class="statusClass(item.status)">{{ item.status }}</td>
-        <td>{{ item.Family }}</td>
-        <td>{{ item.PreparationType }}</td>
-        <td>{{ item.Country }}</td>
-        <td>{{ item.StateProvince }}</td>
-        <td>{{ item.Locality }}</td>
-        <td>{{ item.Latitude }}</td>
-        <td>{{ item.Longitude }}</td>
-
-      </tr>
-      </tbody>
-    </table>
+        <thead>
+        <tr>
+          <th></th>
+          <th>Basis Of Record</th>
+          <th>Catalog Number</th>
+          <th>Collection Code</th>
+          <th>Collector</th>
+          <th>Coordinate Uncertainty (meters)</th>
+          <th>Country</th>
+          <th>County</th>
+          <th>Date Last Modified</th>
+          <th>Day Collected</th>
+          <th>Family</th>
+          <th>Georef Method</th>
+          <th>Horizontal Datum</th>
+          <th>Individual Count</th>
+          <th>Institution Code</th>
+          <th>Island</th>
+          <th>Island Group</th>
+          <th>Lat/Long Comments</th>
+          <th>Latitude</th>
+          <th>Locality</th>
+          <th>Longitude</th>
+          <th>Month Collected</th>
+          <th>Preparation Type</th>
+          <th>Remarks</th>
+          <th>Scientific Name</th>
+          <th>State/Province</th>
+          <th>Tissues</th>
+          <th>Verbatim Depth</th>
+          <th>Verbatim Elevation</th>
+          <th>Year Collected</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="item in selectedItems" :key="item.catalogNumber">
+          <td><input type="checkbox" :checked="item.selected" /></td>
+          <td>{{ item.basisOfRecord }}</td>
+          <td>{{ item.catalogNumber }}</td>
+          <td>{{ item.collectionCode }}</td>
+          <td>{{ item.collector }}</td>
+          <td>{{ item.coordinateUncertaintyInMeters }}</td>
+          <td>{{ item.country }}</td>
+          <td>{{ item.county }}</td>
+          <td>{{ item.dateLastModified }}</td>
+          <td>{{ item.dayCollected }}</td>
+          <td>{{ item.family }}</td>
+          <td>{{ item.georefMethod }}</td>
+          <td>{{ item.horizontalDatum }}</td>
+          <td>{{ item.individualCount }}</td>
+          <td>{{ item.institutionCode }}</td>
+          <td>{{ item.island }}</td>
+          <td>{{ item.islandGroup }}</td>
+          <td>{{ item.latLongComments }}</td>
+          <td>{{ item.latitude }}</td>
+          <td>{{ item.locality }}</td>
+          <td>{{ item.longitude }}</td>
+          <td>{{ item.monthCollected }}</td>
+          <td>{{ item.preparationType }}</td>
+          <td>{{ item.remarks }}</td>
+          <td>{{ item.scientificName }}</td>
+          <td>{{ item.stateProvince }}</td>
+          <td>{{ item.tissues }}</td>
+          <td>{{ item.verbatimDepth }}</td>
+          <td>{{ item.verbatimElevation }}</td>
+          <td>{{ item.yearCollected }}</td>
+        </tr>
+        </tbody>
+      </table>
   </div>
 </template>
 

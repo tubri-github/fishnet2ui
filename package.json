@@ -11,9 +11,11 @@
     "@fortawesome/fontawesome-svg-core": "^6.5.2",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/vue-fontawesome": "^3.0.6",
+    "axios": "^1.7.2",
     "core-js": "^3.8.3",
     "element-plus": "^2.7.3",
     "leaflet": "^1.9.4",
+    "leaflet-draw": "^1.0.4",
     "vue": "^3.2.13",
     "vue-router": "^4.3.0"
   },

@@ -1,10 +1,11 @@
 <template>
   <div class="map-view">
     <div class="search-area">
-      <search-box @search="toggleSelectedList"/>
+<!--      <search-box @search="toggleSelectedList"/>-->
+      <search-box @search="fetchOccurrences" :polygon="polygon"/>
     </div>
     <div class="map-area">
-      <leaflet-map-component ref="map" :selectedItems="items"/>
+      <leaflet-map-component @polygonDrawn="handlePolygonDrawn"  :selectedItems="items"/>
 
       <transition name="slide-up">
         <selected-list
@@ -21,6 +22,7 @@
 
 <script>
 import { ref } from 'vue';
+import api from '@/api/api';
 
 import SearchBox from "@/components/SearchBox";
 import LeafletMapComponent from "@/components/LeafletMapComponent";
@@ -447,9 +449,26 @@ export default {
       },
     ]);
     const showSelectedList = ref(false);
+    const polygon = ref('');
 
     function toggleSelectedList() {
       showSelectedList.value = !showSelectedList.value;
+    }
+    function handlePolygonDrawn(polygonString) {
+      polygon.value = polygonString;
+    }
+
+    async function fetchOccurrences(params) {
+      try {
+        const filteredParams = Object.fromEntries(
+            Object.entries(params).filter(([, value]) => value != null && value !== '')
+        );
+        const response = await api.getOccurrences(filteredParams);
+        items.value = response.data.occurrences;
+        showSelectedList.value = true;
+      } catch (error) {
+        console.error('Error fetching occurrences:', error);
+      }
     }
 
 
@@ -470,7 +489,10 @@ export default {
       search,
       items,
       toggleSelectedList,
-      showSelectedList
+      showSelectedList,
+      handlePolygonDrawn,
+      fetchOccurrences,
+      polygon
     };
   },
 }
