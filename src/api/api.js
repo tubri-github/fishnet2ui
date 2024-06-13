@@ -14,5 +14,16 @@ export default {
     getOccurrences(params) {
         return apiClient.get('/occurrence/', { params });
     },
-    // 可以在这里添加更多 API 调用方法
+
+    getTaxas(params) {
+        return apiClient.get('/taxa/', { params });
+    },
+
+    getLocaton(params) {
+        return apiClient.get('/locations/', { params });
+    },
+
+    getProviders(params) {
+        return apiClient.get('/providers/', { params });
+    },
 };

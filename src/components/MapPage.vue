@@ -12,6 +12,9 @@
             :isActive="showSelectedList"
             v-if="showSelectedList"
             :selectedItems="items"
+            :otherData="otherData"
+            :additionalInfo="additionalInfo"
+            :extraInfo="extraInfo"
             @download ="handleDownload"
         />
       </transition>
@@ -449,9 +452,9 @@ export default {
         Longitude: -100.38391
       },
     ]);
-    // const otherData = ref([]);
-    // const additionalInfo = ref([]);
-    // const extraInfo = ref([]);
+    const otherData = ref([]);
+    const additionalInfo = ref([]);
+    const extraInfo = ref([]);
     let fparams = ref([]);
 
     const showSelectedList = ref(false);
@@ -465,18 +468,18 @@ export default {
             Object.entries(params).filter(([, value]) => value != null && value !== '')
         );
         fparams = filteredParams
-        // const [occurrencesResponse, otherDataResponse, additionalInfoResponse, extraInfoResponse] = await Promise.all([
-        const [occurrencesResponse] = await Promise.all([
+        const [occurrencesResponse, otherDataResponse, additionalInfoResponse, extraInfoResponse] = await Promise.all([
+        // const [occurrencesResponse] = await Promise.all([
           api.getOccurrences(filteredParams),
-          // api.getOtherData(filteredParams),
-          // api.getAdditionalInfo(filteredParams),
-          // api.getExtraInfo(filteredParams)
+          api.getTaxas(filteredParams),
+          api.getProviders(filteredParams),
+          api.getLocaton(filteredParams)
         ]);
 
         items.value = occurrencesResponse.data.occurrences;
-        // otherData.value = otherDataResponse.data;
-        // additionalInfo.value = additionalInfoResponse.data;
-        // extraInfo.value = extraInfoResponse.data;
+        otherData.value = otherDataResponse.data.taxas;
+        additionalInfo.value = additionalInfoResponse.data.providers;
+        extraInfo.value = extraInfoResponse.data.locations;
         showSelectedList.value = true;
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -502,6 +505,15 @@ export default {
         switch (tab) {
           case 'dataTable':
             response = await api.getOccurrences({ ...fparams,... {num:null, fmt: type, att:1} });
+            break;
+          case 'otherData':
+            response = await api.getTaxas({ ...fparams,... {num:null, fmt: type, att:1} });
+            break;
+          case 'additionalInfo':
+            response = await api.getProviders({ ...fparams,... {num:null, fmt: type, att:1} });
+            break;
+          case 'extraInfo':
+            response = await api.getLocaton({ ...fparams,... {num:null, fmt: type, att:1} });
             break;
         }
         const blob = new Blob([response.data], { type: response.headers['content-type'] });
@@ -546,6 +558,9 @@ export default {
       results,
       search,
       items,
+      otherData,
+      additionalInfo,
+      extraInfo,
       toggleSelectedList,
       showSelectedList,
       handlePolygonDrawn,

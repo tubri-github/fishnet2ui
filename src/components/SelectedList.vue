@@ -2,54 +2,51 @@
   <div class="selected-list-container" :class="{ 'active': isActive, 'full-height': fullHeight, 'minimized': !showTable }">
     <div class="selected-list-header">
       <el-tabs v-model="activeTab" @tab-click="handleTabClick">
-        <el-tab-pane label="Data Table" name="dataTable">
+        <el-tab-pane label="Search Results" name="dataTable">
           <div v-if="showTable">
             <div class="download-options">
               <span>Download:</span>
               <select v-model="downloadType" placeholder="Select">
                 <option label="CSV" value="csv"></option>
                 <option label="TXT" value="txt"></option>
-                <option label="KML" value="txt"></option>
+                <option label="KML" value="kml"></option>
               </select>
               <el-button @click="handleDownload">Download</el-button>
             </div>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="Other Data" name="otherData">
+        <el-tab-pane label="Taxon" name="otherData">
           <div class="panel-header">
-            Other Data
             <div class="download-options">
               <span>Download:</span>
-              <el-select v-model="downloadType" placeholder="Select">
-                <el-option label="CSV" value="csv"></el-option>
-                <el-option label="TXT" value="txt"></el-option>
-              </el-select>
+              <select v-model="downloadType" placeholder="Select">
+                <option label="CSV" value="csv"></option>
+                <option label="TXT" value="txt"></option>
+              </select>
               <el-button @click="handleDownload">Download</el-button>
             </div>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="Additional Info" name="additionalInfo">
+        <el-tab-pane label="Providers & Citation" name="additionalInfo">
           <div class="panel-header">
-            Additional Info
             <div class="download-options">
               <span>Download:</span>
-              <el-select v-model="downloadType" placeholder="Select">
-                <el-option label="CSV" value="csv"></el-option>
-                <el-option label="TXT" value="txt"></el-option>
-              </el-select>
+              <select v-model="downloadType" placeholder="Select">
+                <option label="CSV" value="csv"></option>
+                <option label="TXT" value="txt"></option>
+              </select>
               <el-button @click="handleDownload">Download</el-button>
             </div>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="Extra Info" name="extraInfo">
+        <el-tab-pane label="Location" name="extraInfo">
           <div class="panel-header">
-            Extra Info
             <div class="download-options">
               <span>Download:</span>
-              <el-select v-model="downloadType" placeholder="Select">
-                <el-option label="CSV" value="csv"></el-option>
-                <el-option label="TXT" value="txt"></el-option>
-              </el-select>
+              <select v-model="downloadType" placeholder="Select">
+                <option label="CSV" value="csv"></option>
+                <option label="TXT" value="txt"></option>
+              </select>
               <el-button @click="handleDownload">Download</el-button>
             </div>
           </div>
@@ -135,10 +132,74 @@
         </table>
       </div>
       <div v-else-if="activeTab === 'otherData'">
-        <!-- Other Data Content -->
+        <table class="selected-list-table">
+          <thead>
+          <tr>
+            <th></th>
+            <th>ScientificName</th>
+            <th>Num Records</th>
+            <th>EoL Search</th>
+            <th>MB Search</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="item in otherData" :key="item.ScientificName">
+            <td><input type="checkbox" :checked="item.selected" /></td>
+            <td>{{ item.ScientificName }}</td>
+            <td>{{ item.NumRecords }}</td>
+            <td><a href="http://www.eol.org/search?q={{ item.ScientificName }}" target="_blank">Search Encyclopedia of Life</a></td>
+            <td><a href="http://www.morphbank.net/?keywords={{ item.NumRecords }}" target="_blank">Search Morph Bank</a></td>
+          </tr>
+          </tbody>
+        </table>
       </div>
       <div v-else-if="activeTab === 'additionalInfo'">
-        <!-- Additional Info Content -->
+        <table class="selected-list-table">
+          <thead>
+          <tr>
+            <th></th>
+            <th>Institution</th>
+            <th>InstitutionCode</th>
+            <th>Num Records</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="item in additionalInfo" :key="item.InstitutionCode">
+            <td><input type="checkbox" :checked="item.selected" /></td>
+            <td>{{ item.Institution }}</td>
+            <td>{{ item.InstitutionCode }}</td>
+            <td>{{ item.NumRecords }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div v-else-if="activeTab === 'extraInfo'">
+        <table class="selected-list-table">
+          <thead>
+          <tr>
+            <th></th>
+            <th>Country</th>
+            <th>StateProvince</th>
+            <th>County</th>
+            <th>Locality</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>Num Records</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="item in extraInfo" :key="item.InstitutionCode">
+            <td><input type="checkbox" :checked="item.selected" /></td>
+            <td>{{ item.Country }}</td>
+            <td>{{ item.StateProvince }}</td>
+            <td>{{ item.County }}</td>
+            <td>{{ item.Locality }}</td>
+            <td>{{ item.Latitude }}</td>
+            <td>{{ item.Longitude }}</td>
+            <td>{{ item.NumRecords }}</td>
+          </tr>
+          </tbody>
+        </table>
       </div>
     </div>
     <div v-if="showTable" class="selected-list-footer">
@@ -169,12 +230,24 @@ export default defineComponent({
       type: Array,
       default: () => []
     },
+    otherData: {
+      type: Array,
+      default: () => []
+    },
+    additionalInfo: {
+      type: Array,
+      default: () => []
+    },
+    extraInfo: {
+      type: Array,
+      default: () => []
+    },
     isActive: {
       type: Boolean,
       default: false
     }
   },
-  emits: ['close', 'fetchPageData'],
+  emits: ['close', 'fetchPageData','download'],
   setup(props, { emit }) {
     const fullHeight = ref(false);
     const currentPage = ref(1);
@@ -191,7 +264,19 @@ export default defineComponent({
     const paginatedItems = computed(() => {
       const start = (currentPage.value - 1) * pageSize.value;
       const end = start + pageSize.value;
-      return props.selectedItems.slice(start, end);
+      switch (activeTab.value) {
+        case 'dataTable':
+          return props.selectedItems.slice(start, end);
+        case 'otherData':
+          return props.otherData.slice(start, end);
+        case 'additionalInfo':
+          return props.additionalInfo.slice(start, end);
+        case 'extraInfo':
+          return props.extraInfo.slice(start, end);
+        default:
+          return [];
+      }
+
     });
 
     const togglePartialView = () => {
