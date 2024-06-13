@@ -206,18 +206,19 @@
       <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page="currentPage"
+          :current-page="pagination[activeTab]?.currentPage || 1"
           :page-sizes="[10, 20, 50, 100]"
-          :page-size="pageSize"
+          :page-size="pagination[activeTab]?.pageSize || 10"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="totalItems">
+          :total="pagination[activeTab]?.totalItems || 0">
       </el-pagination>
     </div>
+    <div class="resize-handle" @mousedown="initResize"></div>
   </div>
 </template>
 
 <script>
-import {computed, defineComponent, ref, watch} from 'vue';
+import {computed, defineComponent, onBeforeUnmount, onMounted, ref, watch} from 'vue';
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { ElTabs, ElTabPane, ElPagination } from 'element-plus';
 import 'element-plus/dist/index.css';
@@ -245,26 +246,47 @@ export default defineComponent({
     isActive: {
       type: Boolean,
       default: false
+    },
+    paginationData: {
+      type: Object,
+      required: true
     }
   },
   emits: ['close', 'fetchPageData','download'],
   setup(props, { emit }) {
     const fullHeight = ref(false);
-    const currentPage = ref(1);
-    const pageSize = ref(10);
-    const totalItems = ref(0);
+    const selectedListContainer = ref(null);
+    const pagination = ref({
+      dataTable: { currentPage: 1, pageSize: 20, totalItems: props.paginationData.dataTableTotal || 0 },
+      otherData: { currentPage: 1, pageSize: 20, totalItems: props.paginationData.otherDataTotal || 0
+      },
+      additionalInfo: { currentPage: 1, pageSize: 20, totalItems: props.paginationData.additionalInfoTotal || 0 },
+      extraInfo: { currentPage: 1, pageSize: 20, totalItems: props.paginationData.extraInfoTotal || 0 }
+    });
     const activeTab = ref('dataTable');
     const showTable = ref(true);
     const downloadType = ref('csv');
 
-    watch(props.selectedItems, (newItems) => {
-      totalItems.value = newItems.length;
+    watch(props.paginationData, (newData) => {
+      pagination.value.dataTable.totalItems = newData.dataTableTotal;
+      pagination.value.otherData.totalItems = newData.otherDataTotal;
+      pagination.value.additionalInfo.totalItems = newData.additionalInfoTotal;
+      pagination.value.extraInfo.totalItems = newData.extraInfoTotal;
     });
 
+    watch(props.selectedItems, (newItems) => {
+      //pagination.value.dataTable.totalItems = newItems.length;
+      const validItems = newItems.filter(item => item.latitude && item.longitude);
+      emit('updateMap', validItems);
+    });
+
+
     const paginatedItems = computed(() => {
-      const start = (currentPage.value - 1) * pageSize.value;
-      const end = start + pageSize.value;
+      const { currentPage, pageSize } = pagination.value[activeTab.value];
+      const start = (currentPage - 1) * pageSize;
+      const end = start + pageSize;
       switch (activeTab.value) {
+
         case 'dataTable':
           return props.selectedItems.slice(start, end);
         case 'otherData':
@@ -276,7 +298,6 @@ export default defineComponent({
         default:
           return [];
       }
-
     });
 
     const togglePartialView = () => {
@@ -290,20 +311,29 @@ export default defineComponent({
 
     const handleTabClick = (tab) => {
       activeTab.value = tab.name;
+      if (!pagination.value[activeTab.value]) {
+        pagination.value[activeTab.value] = {
+          currentPage: 1,
+          pageSize: 10,
+          totalItems: 0
+        };
+      }
+      fetchData();
     };
 
     const handleSizeChange = (size) => {
-      pageSize.value = size;
+      pagination.value[activeTab.value].pageSize = size;
       fetchData();
     };
 
     const handleCurrentChange = (page) => {
-      currentPage.value = page;
+      pagination.value[activeTab.value].currentPage = page;
       fetchData();
     };
 
     const fetchData = () => {
-      emit('fetchPageData', { page: currentPage.value, size: pageSize.value });
+      emit('fetchPageData', { page: pagination.value[activeTab.value].currentPage, size: pagination.value[activeTab.value].pageSize, tab: activeTab.value })
+
     };
     const toggleTable = () => {
       showTable.value = !showTable.value;
@@ -313,12 +343,46 @@ export default defineComponent({
       emit('download', { type: downloadType.value, tab: activeTab.value });
     };
 
+    const initResize = () => {
+      window.addEventListener('mousemove', startResize);
+      window.addEventListener('mouseup', stopResize);
+    };
+
+    const startResize = (e) => {
+      const height = window.innerHeight - e.clientY;
+      selectedListContainer.value.style.height = `${height}px`;
+    };
+
+    const stopResize = () => {
+      window.removeEventListener('mousemove', startResize);
+      window.removeEventListener('mouseup', stopResize);
+    };
+
+    onMounted(() => {
+      window.addEventListener('mouseup', stopResize);
+    });
+
+    onBeforeUnmount(() => {
+      window.removeEventListener('mouseup', stopResize);
+    });
+
+    const changePage = ({ direction }) => {
+      const currentPage = pagination.value[activeTab.value].currentPage;
+      const totalPages = Math.ceil(pagination.value[activeTab.value].totalItems / pagination.value[activeTab.value].pageSize);
+
+      if (direction === 'prev' && currentPage > 1) {
+        pagination.value[activeTab.value].currentPage -= 1;
+      } else if (direction === 'next' && currentPage < totalPages) {
+        pagination.value[activeTab.value].currentPage += 1;
+      }
+      fetchData();
+    };
+
+
 
     return {
       fullHeight,
-      currentPage,
-      pageSize,
-      totalItems,
+      pagination,
       activeTab,
       paginatedItems,
       togglePartialView,
@@ -331,6 +395,8 @@ export default defineComponent({
       showTable,
       handleDownload,
       downloadType,
+      initResize,
+      changePage,
       close() {
         emit('close');
       },
@@ -394,6 +460,7 @@ export default defineComponent({
 .download-options {
   display: inline-block; /* 使下拉菜单与标题同行显示 */
   margin-left: 10px; /* 添加一点间距 */
+  text-align: left;
 }
 .selected-count {
   background: #dee2e6;
@@ -490,5 +557,13 @@ button {
 .fa-xmark:hover {
   color: #e00b0b; /* 当鼠标悬停时改变颜色 */
 }
-
+.resize-handle {
+  height: 10px;
+  background: #ccc;
+  cursor: row-resize;
+  position: absolute;
+  top: -10px;
+  left: 0;
+  right: 0;
+}
 </style>

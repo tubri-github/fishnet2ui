@@ -1,6 +1,5 @@
 <template>
   <div id="map" class="map-container" ref="mapContainer"></div>
-  <font-awesome-icon :icon="['fas', 'map-pin']" />
 </template>
 
 <script>
@@ -16,14 +15,32 @@ export default {
     selectedItems: {
       type: Array,
       default: () => []
+    },
+    showPaginationButtons: {
+      type: Boolean,
+      default: false
+    },
+    currentPage: {
+      type: Number,
+      default: 1
+    },
+    totalPages: {
+      type: Number,
+      default: 1
+    },
+    resultsPlotted: {
+      type: Number,
+      default: 0
     }
   },
-  emits: ['polygonDrawn'],
+  emits: ['polygonDrawn','changePage'],
   setup(props, { emit }) {
     const mapContainer = ref(null);
    // const markers = ref([]);
     let map;
     let markersLayer;
+    let paginationControlInstance;
+
     const updateMapFocus = (items) => {
       const latLngs = items
           .filter(item => item.Latitude && item.Longitude)
@@ -78,6 +95,70 @@ export default {
         emit('polygonDrawn', wktPolygon);
         //emit('polygonDrawn', polygonString);
       });
+      if (props.showPaginationButtons) {
+        addPaginationControls();
+      }
+
+      window.addEventListener('resize', updatePaginationControlPosition);
+      updatePaginationControlPosition();
+    });
+
+    const addPaginationControls = () => {
+      const paginationControl = L.Control.extend({
+        options: {
+          position: 'topright'  // 控件位置
+        },
+        onAdd: function () {
+          const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+          const paginationContainer = L.DomUtil.create('div', 'pagination-container', container);
+
+          const prevButton = L.DomUtil.create('a', 'leaflet-control-button', paginationContainer);
+          prevButton.innerHTML = '&laquo;';
+          prevButton.href = '#';
+          prevButton.title = 'Previous Page';
+          prevButton.onclick = () => {
+            emit('changePage', { direction: 'prev' });
+            return false;
+          };
+
+          const pageInfo = L.DomUtil.create('span', 'page-info', paginationContainer);
+          pageInfo.id ='page-info'
+          pageInfo.innerHTML = `Page ${props.currentPage} of ${props.totalPages} (${props.resultsPlotted} results plotted)`;
+
+          const nextButton = L.DomUtil.create('a', 'leaflet-control-button', paginationContainer);
+          nextButton.innerHTML = '&raquo;';
+          nextButton.href = '#';
+          nextButton.title = 'Next Page';
+          nextButton.onclick = () => {
+            emit('changePage', { direction: 'next' });
+            return false;
+          };
+
+          return container;
+        }
+      });
+
+      map.addControl(new paginationControl());
+      updatePaginationInfo();
+    };
+
+    watch([() => props.currentPage, () => props.totalPages, () => props.resultsPlotted], () => {
+        updatePaginationInfo();
+    });
+    const updatePaginationInfo = () => {
+      const pageInfo = document.getElementById('page-info');
+      if (pageInfo) {
+        pageInfo.innerHTML = `Page ${props.currentPage} of ${props.totalPages} (${props.resultsPlotted} results plotted)`;
+      }
+    };
+
+    watch(() => props.showPaginationButtons, (show) => {
+      if (show) {
+        addPaginationControls();
+      } else if (paginationControlInstance) {
+        map.removeControl(paginationControlInstance);
+        paginationControlInstance = null;
+      }
     });
 
     watch(() => props.selectedItems, (newItems) => {
@@ -99,16 +180,37 @@ export default {
       updateMapFocus(newItems)
     });
 
+    const updatePaginationControlPosition = () => {
+      const paginationContainer = document.querySelector('.pagination-container');
+      if (paginationContainer) {
+        const mapWidth = map.getSize().x;
+        const containerWidth = paginationContainer.offsetWidth;
+        const leftOffset = (mapWidth - containerWidth) / 2;
+        paginationContainer.style.left = '50%';
+        paginationContainer.style.transform = `translateX(-${leftOffset}px)`;
+      }
+    };
+
     onBeforeUnmount(() => {
       // 组件卸载前清理地图
       if (map) {
         map.remove();
         map = null;
       }
+      window.removeEventListener('resize', updatePaginationControlPosition);
     });
+    const goToPreviousPage = () => {
+      emit('changePage', { direction: 'prev' });
+    };
+
+    const goToNextPage = () => {
+      emit('changePage', { direction: 'next' });
+    };
     return {
       // 如果你需要在模板中访问地图实例，可以返回它
-      mapContainer
+      mapContainer,
+      goToNextPage,
+      goToPreviousPage
     };
   }
 };
@@ -129,6 +231,23 @@ export default {
   height: 100%;
   width: 100%;
 }
+.leaflet-control-button {
+  display: block;
+  width: 80px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  background-color: white;
+  color: black;
+  text-decoration: none;
+  border: 1px solid rgba(0,0,0,0.2);
+  cursor: pointer;
+}
+
+.leaflet-control-button:hover {
+  background-color: #f0f0f0;
+}
+
 .custom-icon {
   color: red;
   font-size: 24px;
@@ -136,4 +255,31 @@ export default {
   top: -24px;
   left: -12px;
 }
+.leaflet-right{
+  left: 50%;
+  transform: translateX(-50%);
+}
+.pagination-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+  padding: 5px;
+  position: absolute;
+  top: 10px;
+  z-index: 1000;
+}
+
+
+.leaflet-control-button:hover {
+  background-color: #f0f0f0;
+}
+
+.page-info {
+  margin: 0 10px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
 </style>

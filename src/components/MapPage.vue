@@ -5,16 +5,25 @@
       <search-box @search="fetchOccurrences" :polygon="polygon"/>
     </div>
     <div class="map-area" :class="{ 'loading': isLoading }">
-      <leaflet-map-component @polygonDrawn="handlePolygonDrawn"  :selectedItems="items"/>
+      <leaflet-map-component @polygonDrawn="handlePolygonDrawn"
+                             :selectedItems="items"
+                             :showPaginationButtons="items.length > 0"
+                             :currentPage="pagination.currentPage"
+                             :totalPages="pagination.totalPages"
+                             :resultsPlotted="items.length"
+                             @changePage="changePage"/>
 
       <transition name="slide-up">
         <selected-list
+            ref="selectedListRef"
             :isActive="showSelectedList"
             v-if="showSelectedList"
             :selectedItems="items"
             :otherData="otherData"
             :additionalInfo="additionalInfo"
             :extraInfo="extraInfo"
+            :paginationData="paginationData"
+            @fetchPageData="fetchPageData"
             @download ="handleDownload"
         />
       </transition>
@@ -24,7 +33,7 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import {computed, ref} from 'vue';
 import api from '@/api/api';
 import debounce from 'lodash/debounce';
 
@@ -41,425 +50,29 @@ export default {
   setup() {
     const searchTerm = ref('');
     const results = ref([]);
-    const items = ref([
-        {
-          InstitutionCode: "UNSM",
-          CollectionCode: "Fish",
-          CatalogNumber: "773",
-          ScientificName: "Notropis atherinoides",
-          Family: "Cyprinidae",
-          PreparationType: "Alcoholic",
-          Country: "U.S.A.",
-          StateProvince: "Nebraska",
-          County: "Saunders",
-          Locality: "Salt Creek At Ashland; T12N,R9E,S1, W1/2; Salt Creek",
-          YearCollected: 1977,
-          MonthCollected: 10,
-          DayCollected: 19,
-          Collector: "Peters, E.J.; Maret, T.",
-          BasisOfRecord: "Voucher",
-          Remarks: "Publication:maret,t.r. And E.j. Peters. 1980. The Fishes Of Salt Creek Basin, Nebraska. Transactions Of The Nebraska Academy Of Sciences. Viii: 35-54.",
-          DateLastModified: "2006-04-25T",
-          status:"active",
-          Latitude: 40.09478,
-          Longitude: -99.43253
-
-        },
-        {
-          InstitutionCode: "UNSM",
-          CollectionCode: "Fish",
-          CatalogNumber: "785",
-          ScientificName: "Notropis atherinoides",
-          Family: "Cyprinidae",
-          PreparationType: "Alcoholic",
-          Country: "U.S.A.",
-          StateProvince: "Nebraska",
-          County: "Hall",
-          Locality: "Platte River At Mormon Island; Middle Platte River",
-          YearCollected: 1980,
-          Collector: "Cochnar, J.; Jenson, D.",
-          BasisOfRecord: "Voucher",
-          Remarks: "Mormon Island Fish Inventory",
-          DateLastModified: "2006-04-25T",
-          status:"active",
-          Latitude: 40.06816,
-          Longitude: -99.37672
-        },
-        {
-          InstitutionCode: "UNSM",
-          CollectionCode: "Fish",
-          CatalogNumber: "7920",
-          IndividualCount: 4,
-          ScientificName: "Notropis atherinoides",
-          Family: "Cyprinidae",
-          PreparationType: "Alcoholic",
-          Latitude: 42.92198,
-          Longitude: -98.40169,
-          CoordinateUncertaintyInMeters: 4000,
-          Country: "U.S.A.",
-          StateProvince: "Nebraska",
-          County: "Boyd",
-          Locality: "Missouri River At Sunshine Bottoms, N. of Lynch, NE; Missouri River",
-          YearCollected: 1976,
-          MonthCollected: 8,
-          Collector: "Peters, E.J.; Fiet, D.",
-          BasisOfRecord: "Voucher",
-          Remarks: "Identified By Bob Hrabik 02 Aug 1984",
-          DateLastModified: "2006-04-25T",
-          status:"closed",
-
-        },
-        {
-          InstitutionCode: "UNSM",
-          CollectionCode: "Fish",
-          CatalogNumber: "8011",
-          ScientificName: "Notropis atherinoides",
-          Family: "Cyprinidae",
-          PreparationType: "Alcoholic",
-          Country: "U.S.A.",
-          StateProvince: "Nebraska",
-          County: "Cass",
-          Locality: "Platte River At Louisville; T12N,R11E; Lower Platte River",
-          YearCollected: 1973,
-          MonthCollected: 7,
-          Collector: "Lynch, J.D.",
-          BasisOfRecord: "Voucher",
-          DateLastModified: "2006-04-25T",
-          status:"active",
-          Latitude: 40.28672,
-          Longitude: -99.84347
-        },
-        {
-          InstitutionCode: "UNSM",
-          CollectionCode: "Fish",
-          CatalogNumber: "813",
-          ScientificName: "Notropis atherinoides",
-          Family: "Cyprinidae",
-          PreparationType: "Alcoholic",
-          Country: "U.S.A.",
-          StateProvince: "Oklahoma",
-          Locality: "Salt Fork Of Arkansas River",
-          YearCollected: 1939,
-          MonthCollected: 8,
-          DayCollected: 24,
-          Collector: "Moore, G.A.; Class",
-          BasisOfRecord: "Voucher",
-          Remarks: "Note: Notropis Percobromus= N. Atherinoides",
-          DateLastModified: "2006-04-25T",
-          status:"reforming",
-          Latitude: 40.24452,
-          Longitude: -99.70591
-        },
-        {
-          InstitutionCode: "UNSM",
-          CollectionCode: "Fish",
-          CatalogNumber: "2476",
-          ScientificName: "Notropis atherinoides",
-          Family: "Cyprinidae",
-          PreparationType: "Alcoholic",
-          Country: "U.S.A.",
-          StateProvince: "Nebraska",
-          County: "Nemaha",
-          Locality: "Little Nemaha River; T5N,R14E,S9,SE1/4; Little Nemaha River",
-          YearCollected: 1973,
-          MonthCollected: 8,
-          DayCollected: 28,
-          Collector: "Schainost, S.; Kucera, P.",
-          BasisOfRecord: "Voucher",
-          Remarks: "Bliss, Q. And S. Schainost. 1973. Nebraska Stream Inventory Reports. Nebraska Game And Parks Commission Wildlife Services, Aquatic Wildlife Division, Lincoln. Ne, 68503.",
-          DateLastModified: "2006-04-25T",
-          status:"active",
-          Latitude: 40.25511,
-          Longitude: -100.1205
-        },
-        {
-          InstitutionCode: "UNSM",
-          CollectionCode: "Fish",
-          CatalogNumber: "24815",
-          ScientificName: "Notropis atherinoides",
-          Family: "Cyprinidae",
-          PreparationType: "Alcoholic",
-          Country: "U.S.A.",
-          StateProvince: "Nebraska",
-          County: "Nemaha",
-          DateLastModified: "2006-04-25T",
-          status:"active",
-          Latitude: 40.11145,
-          Longitude: -99.48468
-        },
-      {
-        InstitutionCode: "UNSM",
-        CollectionCode: "Fish",
-        CatalogNumber: "24815",
-        ScientificName: "Notropis atherinoides",
-        Family: "Cyprinidae",
-        PreparationType: "Alcoholic",
-        Country: "U.S.A.",
-        StateProvince: "Nebraska",
-        County: "Nemaha",
-        DateLastModified: "2006-04-25T",
-        status:"active",
-        Latitude: 40.09478,
-        Longitude: -99.43253
-      },
-      {
-        InstitutionCode: "UNSM",
-        CollectionCode: "Fish",
-        CatalogNumber: "24815",
-        ScientificName: "Notropis atherinoides",
-        Family: "Cyprinidae",
-        PreparationType: "Alcoholic",
-        Country: "U.S.A.",
-        StateProvince: "Nebraska",
-        County: "Nemaha",
-        DateLastModified: "2006-04-25T",
-        status:"active",
-        Latitude: 40.22732,
-        Longitude: -100.38391
-      },
-      {
-        InstitutionCode: "UNSM",
-        CollectionCode: "Fish",
-        CatalogNumber: "24815",
-        ScientificName: "Notropis atherinoides",
-        Family: "Cyprinidae",
-        PreparationType: "Alcoholic",
-        Country: "U.S.A.",
-        StateProvince: "Nebraska",
-        County: "Nemaha",
-        DateLastModified: "2006-04-25T",
-        status:"active",
-        Latitude: 40.06816,
-        Longitude: -99.37672
-      },
-      {
-        InstitutionCode: "UNSM",
-        CollectionCode: "Fish",
-        CatalogNumber: "24814",
-        ScientificName: "Notropis atherinoides",
-        Family: "Cyprinidae",
-        PreparationType: "Alcoholic",
-        Country: "U.S.A.",
-        StateProvince: "Nebraska",
-        County: "Nemaha",
-        DateLastModified: "2006-04-25T",
-        status:"active",
-        Latitude: 40.0094,
-        Longitude: -98.05828
-      },
-      {
-        InstitutionCode: "UNSM",
-        CollectionCode: "Fish",
-        CatalogNumber: "24811",
-        ScientificName: "Notropis atherinoides",
-        Family: "Cyprinidae",
-        PreparationType: "Alcoholic",
-        Country: "U.S.A.",
-        StateProvince: "Nebraska",
-        County: "Nemaha",
-        DateLastModified: "2006-04-25T",
-        status:"active",
-        Latitude: 40.06918,
-        Longitude: -98.37672
-      },
-      {
-        InstitutionCode: "UNSM",
-        CollectionCode: "Fish",
-        CatalogNumber: "24819",
-        ScientificName: "Notropis atherinoides",
-        Family: "Cyprinidae",
-        PreparationType: "Alcoholic",
-        Country: "U.S.A.",
-        StateProvince: "Nebraska",
-        County: "Nemaha",
-        DateLastModified: "2006-04-25T",
-        status:"active",
-        Latitude: 40.09478,
-        Longitude: -99.43253
-      },
-      {
-        InstitutionCode: "UNSM",
-        CollectionCode: "Fish",
-        CatalogNumber: "24812",
-        ScientificName: "Notropis atherinoides",
-        Family: "Cyprinidae",
-        PreparationType: "Alcoholic",
-        Country: "U.S.A.",
-        StateProvince: "Nebraska",
-        County: "Nemaha",
-        DateLastModified: "2006-04-25T",
-        status:"active",
-        Latitude: 40.22732,
-        Longitude: -100.38391
-      },
-      {
-        InstitutionCode: "UNSM",
-        CollectionCode: "Fish",
-        CatalogNumber: "24813",
-        ScientificName: "Notropis atherinoides",
-        Family: "Cyprinidae",
-        PreparationType: "Alcoholic",
-        Country: "U.S.A.",
-        StateProvince: "Nebraska",
-        County: "Nemaha",
-        DateLastModified: "2006-04-25T",
-        status:"active",
-        Latitude: 40.22732,
-        Longitude: -100.38391
-      },
-      {
-        InstitutionCode: "UNSM",
-        CollectionCode: "Fish",
-        CatalogNumber: "773",
-        ScientificName: "Notropis atherinoides",
-        Family: "Cyprinidae",
-        PreparationType: "Alcoholic",
-        Country: "U.S.A.",
-        StateProvince: "Nebraska",
-        County: "Saunders",
-        Locality: "Salt Creek At Ashland; T12N,R9E,S1, W1/2; Salt Creek",
-        YearCollected: 1977,
-        MonthCollected: 10,
-        DayCollected: 19,
-        Collector: "Peters, E.J.; Maret, T.",
-        BasisOfRecord: "Voucher",
-        Remarks: "Publication:maret,t.r. And E.j. Peters. 1980. The Fishes Of Salt Creek Basin, Nebraska. Transactions Of The Nebraska Academy Of Sciences. Viii: 35-54.",
-        DateLastModified: "2006-04-25T",
-        status:"active",
-        Latitude: 40.22732,
-        Longitude: -100.38391
-      },
-      {
-        InstitutionCode: "UNSM",
-        CollectionCode: "Fish",
-        CatalogNumber: "785",
-        ScientificName: "Notropis atherinoides",
-        Family: "Cyprinidae",
-        PreparationType: "Alcoholic",
-        Country: "U.S.A.",
-        StateProvince: "Nebraska",
-        County: "Hall",
-        Locality: "Platte River At Mormon Island; Middle Platte River",
-        YearCollected: 1980,
-        Collector: "Cochnar, J.; Jenson, D.",
-        BasisOfRecord: "Voucher",
-        Remarks: "Mormon Island Fish Inventory",
-        DateLastModified: "2006-04-25T",
-        status:"active",
-        Latitude: 40.22732,
-        Longitude: -100.38391
-      },
-      {
-        InstitutionCode: "UNSM",
-        CollectionCode: "Fish",
-        CatalogNumber: "7920",
-        IndividualCount: 4,
-        ScientificName: "Notropis atherinoides",
-        Family: "Cyprinidae",
-        PreparationType: "Alcoholic",
-        Latitude: 42.92198,
-        Longitude: -98.40169,
-        CoordinateUncertaintyInMeters: 4000,
-        Country: "U.S.A.",
-        StateProvince: "Nebraska",
-        County: "Boyd",
-        Locality: "Missouri River At Sunshine Bottoms, N. of Lynch, NE; Missouri River",
-        YearCollected: 1976,
-        MonthCollected: 8,
-        Collector: "Peters, E.J.; Fiet, D.",
-        BasisOfRecord: "Voucher",
-        Remarks: "Identified By Bob Hrabik 02 Aug 1984",
-        DateLastModified: "2006-04-25T",
-        status:"closed",
-
-      },
-      {
-        InstitutionCode: "UNSM",
-        CollectionCode: "Fish",
-        CatalogNumber: "8011",
-        ScientificName: "Notropis atherinoides",
-        Family: "Cyprinidae",
-        PreparationType: "Alcoholic",
-        Country: "U.S.A.",
-        StateProvince: "Nebraska",
-        County: "Cass",
-        Locality: "Platte River At Louisville; T12N,R11E; Lower Platte River",
-        YearCollected: 1973,
-        MonthCollected: 7,
-        Collector: "Lynch, J.D.",
-        BasisOfRecord: "Voucher",
-        DateLastModified: "2006-04-25T",
-        status:"active",
-        Latitude: 40.22732,
-        Longitude: -100.38391
-      },
-      {
-        InstitutionCode: "UNSM",
-        CollectionCode: "Fish",
-        CatalogNumber: "813",
-        ScientificName: "Notropis atherinoides",
-        Family: "Cyprinidae",
-        PreparationType: "Alcoholic",
-        Country: "U.S.A.",
-        StateProvince: "Oklahoma",
-        Locality: "Salt Fork Of Arkansas River",
-        YearCollected: 1939,
-        MonthCollected: 8,
-        DayCollected: 24,
-        Collector: "Moore, G.A.; Class",
-        BasisOfRecord: "Voucher",
-        Remarks: "Note: Notropis Percobromus= N. Atherinoides",
-        DateLastModified: "2006-04-25T",
-        status:"reforming",
-        Latitude: 40.22732,
-        Longitude: -100.38391
-      },
-      {
-        InstitutionCode: "UNSM",
-        CollectionCode: "Fish",
-        CatalogNumber: "2476",
-        ScientificName: "Notropis atherinoides",
-        Family: "Cyprinidae",
-        PreparationType: "Alcoholic",
-        Country: "U.S.A.",
-        StateProvince: "Nebraska",
-        County: "Nemaha",
-        Locality: "Little Nemaha River; T5N,R14E,S9,SE1/4; Little Nemaha River",
-        YearCollected: 1973,
-        MonthCollected: 8,
-        DayCollected: 28,
-        Collector: "Schainost, S.; Kucera, P.",
-        BasisOfRecord: "Voucher",
-        Remarks: "Bliss, Q. And S. Schainost. 1973. Nebraska Stream Inventory Reports. Nebraska Game And Parks Commission Wildlife Services, Aquatic Wildlife Division, Lincoln. Ne, 68503.",
-        DateLastModified: "2006-04-25T",
-        status:"active",
-        Latitude: 40.22732,
-        Longitude: -100.38391
-      },
-      {
-        InstitutionCode: "UNSM",
-        CollectionCode: "Fish",
-        CatalogNumber: "24815",
-        ScientificName: "Notropis atherinoides",
-        Family: "Cyprinidae",
-        PreparationType: "Alcoholic",
-        Country: "U.S.A.",
-        StateProvince: "Nebraska",
-        County: "Nemaha",
-        DateLastModified: "2006-04-25T",
-        status:"active",
-        Latitude: 40.22732,
-        Longitude: -100.38391
-      },
-    ]);
+    const items = ref([]);
     const otherData = ref([]);
     const additionalInfo = ref([]);
     const extraInfo = ref([]);
     let fparams = ref([]);
+    const paginationData = ref({
+      dataTableTotal: 0,
+      otherDataTotal: 0,
+      additionalInfoTotal: 0,
+      extraInfoTotal: 0
+    });
+    const pagination = ref({
+      currentPage: 1,
+      pageSize: 10,
+      totalItems: 0,
+      totalPages: computed(() => Math.ceil(pagination.value.totalItems / pagination.value.pageSize))
+    });
+
 
     const showSelectedList = ref(false);
     const polygon = ref('');
     const isLoading = ref(false);
+    const selectedListRef = ref(null);
 
     const debouncedFetchOccurrences = debounce(async (params) => {
       try {
@@ -477,9 +90,15 @@ export default {
         ]);
 
         items.value = occurrencesResponse.data.occurrences;
+        paginationData.value.dataTableTotal = occurrencesResponse.data.total;
+        pagination.value.totalItems = occurrencesResponse.data.total;
+        pagination.value.pageSize = 20;
         otherData.value = otherDataResponse.data.taxas;
+        paginationData.value.otherDataTotal = otherDataResponse.data.total;
         additionalInfo.value = additionalInfoResponse.data.providers;
+        paginationData.value.additionalInfoTotal = additionalInfoResponse.data.total;
         extraInfo.value = extraInfoResponse.data.locations;
+        paginationData.value.extraInfoTotal = extraInfoResponse.data.total;
         showSelectedList.value = true;
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -499,6 +118,45 @@ export default {
     async function fetchOccurrences(params) {
       debouncedFetchOccurrences(params);
     }
+
+
+    async function fetchPageData({ page, size, tab }) {
+      try {
+        isLoading.value = true;
+        let response;
+        switch (tab) {
+          case 'dataTable':
+            response = await api.getOccurrences({ ...fparams,... {num:size,set:page} });
+            items.value = response.data.occurrences;
+            paginationData.value.otherDataTotal = response.data.total;
+            pagination.value.currentPage = page;
+            pagination.value.pageSize = size;
+            pagination.value.totalItems = response.data.total;
+            break;
+          case 'otherData':
+            response = await api.getTaxas({ ...fparams,... {num:size,set:page} });
+            otherData.value = response.data.taxas;
+            paginationData.value.additionalInfoTotal = response.data.total;
+            break;
+          case 'additionalInfo':
+            response = await api.getProviders({ ...fparams,... {num:size,set:page} });
+            additionalInfo.value = response.data.providers;
+            paginationData.value.dataTableTotal = response.data.total;
+            break;
+          case 'extraInfo':
+            response = await api.getLocaton({ ...fparams,... {num:size,set:page} });
+            extraInfo.value = response.data.locations;
+            paginationData.value.extraInfoTotal = response.data.total;
+            break;
+        }
+      } catch (error) {
+        console.error('Error fetching page data:', error);
+        alert('Error fetching page data');
+      } finally {
+        isLoading.value = false;
+      }
+    }
+
     async function handleDownload({ type, tab }) {
       try {
         let response;
@@ -553,6 +211,15 @@ export default {
       ];
     }
 
+    function changePage({ direction }) {
+      const selectedList = selectedListRef.value;
+      if (selectedList) {
+        selectedList.changePage({ direction });
+      }
+    }
+
+
+
     return {
       searchTerm,
       results,
@@ -568,6 +235,11 @@ export default {
       handleDownload,
       polygon,
       isLoading,
+      fetchPageData,
+      paginationData,
+      changePage,
+      selectedListRef,
+      pagination
     };
   },
 }
