@@ -1,105 +1,169 @@
 <template>
-  <div class="selected-list-container" :class="{ 'active': isActive, 'full-height': fullHeight  }">
+  <div class="selected-list-container" :class="{ 'active': isActive, 'full-height': fullHeight, 'minimized': !showTable }">
     <div class="selected-list-header">
-      <div class="selected-list-header-left">
-        Results
-        <div class="download-options">
-          <span>Download:</span>
-          <select>
-            <option value="csv">CSV</option>
-            <option value="txt">TXT</option>
-            <option value="kml">KML</option>
-          </select>
-      </div>
-
-      </div>
+      <el-tabs v-model="activeTab" @tab-click="handleTabClick">
+        <el-tab-pane label="Data Table" name="dataTable">
+          <div v-if="showTable">
+            <div class="download-options">
+              <span>Download:</span>
+              <select v-model="downloadType" placeholder="Select">
+                <option label="CSV" value="csv"></option>
+                <option label="TXT" value="txt"></option>
+                <option label="KML" value="txt"></option>
+              </select>
+              <el-button @click="handleDownload">Download</el-button>
+            </div>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="Other Data" name="otherData">
+          <div class="panel-header">
+            Other Data
+            <div class="download-options">
+              <span>Download:</span>
+              <el-select v-model="downloadType" placeholder="Select">
+                <el-option label="CSV" value="csv"></el-option>
+                <el-option label="TXT" value="txt"></el-option>
+              </el-select>
+              <el-button @click="handleDownload">Download</el-button>
+            </div>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="Additional Info" name="additionalInfo">
+          <div class="panel-header">
+            Additional Info
+            <div class="download-options">
+              <span>Download:</span>
+              <el-select v-model="downloadType" placeholder="Select">
+                <el-option label="CSV" value="csv"></el-option>
+                <el-option label="TXT" value="txt"></el-option>
+              </el-select>
+              <el-button @click="handleDownload">Download</el-button>
+            </div>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="Extra Info" name="extraInfo">
+          <div class="panel-header">
+            Extra Info
+            <div class="download-options">
+              <span>Download:</span>
+              <el-select v-model="downloadType" placeholder="Select">
+                <el-option label="CSV" value="csv"></el-option>
+                <el-option label="TXT" value="txt"></el-option>
+              </el-select>
+              <el-button @click="handleDownload">Download</el-button>
+            </div>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
       <div>
-        <button  @click="togglePartialView"><font-awesome-icon icon="window-restore"/></button>
-        <button @click="toggleFullView"><font-awesome-icon icon="expand-arrows-alt"/></button>
-        <button  @click="$emit('close')"><font-awesome-icon icon="times"/></button>
+        <button @click="togglePartialView"><font-awesome-icon icon="window-restore" /></button>
+        <button @click="toggleFullView"><font-awesome-icon icon="expand-arrows-alt" /></button>
+        <button @click="toggleTable"><font-awesome-icon icon="times" /></button>
       </div>
-
     </div>
-    <table class="selected-list-table">
-        <thead>
-        <tr>
-          <th></th>
-          <th>Basis Of Record</th>
-          <th>Catalog Number</th>
-          <th>Collection Code</th>
-          <th>Collector</th>
-          <th>Coordinate Uncertainty (meters)</th>
-          <th>Country</th>
-          <th>County</th>
-          <th>Date Last Modified</th>
-          <th>Day Collected</th>
-          <th>Family</th>
-          <th>Georef Method</th>
-          <th>Horizontal Datum</th>
-          <th>Individual Count</th>
-          <th>Institution Code</th>
-          <th>Island</th>
-          <th>Island Group</th>
-          <th>Lat/Long Comments</th>
-          <th>Latitude</th>
-          <th>Locality</th>
-          <th>Longitude</th>
-          <th>Month Collected</th>
-          <th>Preparation Type</th>
-          <th>Remarks</th>
-          <th>Scientific Name</th>
-          <th>State/Province</th>
-          <th>Tissues</th>
-          <th>Verbatim Depth</th>
-          <th>Verbatim Elevation</th>
-          <th>Year Collected</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="item in selectedItems" :key="item.catalogNumber">
-          <td><input type="checkbox" :checked="item.selected" /></td>
-          <td>{{ item.basisOfRecord }}</td>
-          <td>{{ item.catalogNumber }}</td>
-          <td>{{ item.collectionCode }}</td>
-          <td>{{ item.collector }}</td>
-          <td>{{ item.coordinateUncertaintyInMeters }}</td>
-          <td>{{ item.country }}</td>
-          <td>{{ item.county }}</td>
-          <td>{{ item.dateLastModified }}</td>
-          <td>{{ item.dayCollected }}</td>
-          <td>{{ item.family }}</td>
-          <td>{{ item.georefMethod }}</td>
-          <td>{{ item.horizontalDatum }}</td>
-          <td>{{ item.individualCount }}</td>
-          <td>{{ item.institutionCode }}</td>
-          <td>{{ item.island }}</td>
-          <td>{{ item.islandGroup }}</td>
-          <td>{{ item.latLongComments }}</td>
-          <td>{{ item.latitude }}</td>
-          <td>{{ item.locality }}</td>
-          <td>{{ item.longitude }}</td>
-          <td>{{ item.monthCollected }}</td>
-          <td>{{ item.preparationType }}</td>
-          <td>{{ item.remarks }}</td>
-          <td>{{ item.scientificName }}</td>
-          <td>{{ item.stateProvince }}</td>
-          <td>{{ item.tissues }}</td>
-          <td>{{ item.verbatimDepth }}</td>
-          <td>{{ item.verbatimElevation }}</td>
-          <td>{{ item.yearCollected }}</td>
-        </tr>
-        </tbody>
-      </table>
+    <div v-if="showTable" class="selected-list-content" :class="{ 'full-height': fullHeight }">
+      <div v-if="activeTab === 'dataTable'">
+        <table class="selected-list-table">
+          <thead>
+          <tr>
+            <th></th>
+            <th>Basis Of Record</th>
+            <th>Catalog Number</th>
+            <th>Collection Code</th>
+            <th>Collector</th>
+            <th>Coordinate Uncertainty (meters)</th>
+            <th>Country</th>
+            <th>County</th>
+            <th>Date Last Modified</th>
+            <th>Day Collected</th>
+            <th>Family</th>
+            <th>Georef Method</th>
+            <th>Horizontal Datum</th>
+            <th>Individual Count</th>
+            <th>Institution Code</th>
+            <th>Island</th>
+            <th>Island Group</th>
+            <th>Lat/Long Comments</th>
+            <th>Latitude</th>
+            <th>Locality</th>
+            <th>Longitude</th>
+            <th>Month Collected</th>
+            <th>Preparation Type</th>
+            <th>Remarks</th>
+            <th>Scientific Name</th>
+            <th>State/Province</th>
+            <th>Tissues</th>
+            <th>Verbatim Depth</th>
+            <th>Verbatim Elevation</th>
+            <th>Year Collected</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="item in selectedItems" :key="item.CatalogNumber">
+            <td><input type="checkbox" :checked="item.selected" /></td>
+            <td>{{ item.BasisOfRecord }}</td>
+            <td>{{ item.CatalogNumber }}</td>
+            <td>{{ item.CollectionCode }}</td>
+            <td>{{ item.Collector }}</td>
+            <td>{{ item.CoordinateUncertaintyInMeters }}</td>
+            <td>{{ item.Country }}</td>
+            <td>{{ item.County }}</td>
+            <td>{{ item.DateLastModified }}</td>
+            <td>{{ item.DayCollected }}</td>
+            <td>{{ item.Family }}</td>
+            <td>{{ item.GeorefMethod }}</td>
+            <td>{{ item.HorizontalDatum }}</td>
+            <td>{{ item.IndividualCount }}</td>
+            <td>{{ item.InstitutionCode }}</td>
+            <td>{{ item.Island }}</td>
+            <td>{{ item.IslandGroup }}</td>
+            <td>{{ item.LatLongComments }}</td>
+            <td>{{ item.Latitude }}</td>
+            <td>{{ item.Locality }}</td>
+            <td>{{ item.Longitude }}</td>
+            <td>{{ item.MonthCollected }}</td>
+            <td>{{ item.PreparationType }}</td>
+            <td>{{ item.Remarks }}</td>
+            <td>{{ item.ScientificName }}</td>
+            <td>{{ item.StateProvince }}</td>
+            <td>{{ item.Tissues }}</td>
+            <td>{{ item.VerbatimDepth }}</td>
+            <td>{{ item.VerbatimElevation }}</td>
+            <td>{{ item.YearCollected }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div v-else-if="activeTab === 'otherData'">
+        <!-- Other Data Content -->
+      </div>
+      <div v-else-if="activeTab === 'additionalInfo'">
+        <!-- Additional Info Content -->
+      </div>
+    </div>
+    <div v-if="showTable" class="selected-list-footer">
+      <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-sizes="[10, 20, 50, 100]"
+          :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="totalItems">
+      </el-pagination>
+    </div>
   </div>
 </template>
 
 <script>
-import { defineComponent,ref } from 'vue';
-import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import {computed, defineComponent, ref, watch} from 'vue';
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { ElTabs, ElTabPane, ElPagination } from 'element-plus';
+import 'element-plus/dist/index.css';
 
 export default defineComponent({
   name: 'SelectedList',
-  components: {FontAwesomeIcon},
+  components: { FontAwesomeIcon, ElTabs, ElTabPane, ElPagination },
   props: {
     selectedItems: {
       type: Array,
@@ -110,27 +174,78 @@ export default defineComponent({
       default: false
     }
   },
-  emits: ['close'],
+  emits: ['close', 'fetchPageData'],
   setup(props, { emit }) {
     const fullHeight = ref(false);
+    const currentPage = ref(1);
+    const pageSize = ref(10);
+    const totalItems = ref(0);
+    const activeTab = ref('dataTable');
+    const showTable = ref(true);
+    const downloadType = ref('csv');
+
+    watch(props.selectedItems, (newItems) => {
+      totalItems.value = newItems.length;
+    });
+
+    const paginatedItems = computed(() => {
+      const start = (currentPage.value - 1) * pageSize.value;
+      const end = start + pageSize.value;
+      return props.selectedItems.slice(start, end);
+    });
 
     const togglePartialView = () => {
       fullHeight.value = false;
     };
 
     const toggleFullView = () => {
-      fullHeight.value = true;
+      fullHeight.value = !fullHeight.value;
+      showTable.value = true;
     };
 
-    // const partialViewIcon = computed(() => fullHeight.value ? '图标1' : '图标2');
-    // const fullViewIcon = computed(() => fullHeight.value ? '图标2' : '图标1');
+    const handleTabClick = (tab) => {
+      activeTab.value = tab.name;
+    };
+
+    const handleSizeChange = (size) => {
+      pageSize.value = size;
+      fetchData();
+    };
+
+    const handleCurrentChange = (page) => {
+      currentPage.value = page;
+      fetchData();
+    };
+
+    const fetchData = () => {
+      emit('fetchPageData', { page: currentPage.value, size: pageSize.value });
+    };
+    const toggleTable = () => {
+      showTable.value = !showTable.value;
+    };
+
+    const handleDownload = () => {
+      emit('download', { type: downloadType.value, tab: activeTab.value });
+    };
+
 
     return {
       fullHeight,
+      currentPage,
+      pageSize,
+      totalItems,
+      activeTab,
+      paginatedItems,
       togglePartialView,
       toggleFullView,
-      // partialViewIcon,
-      // fullViewIcon,
+      handleTabClick,
+      handleSizeChange,
+      handleCurrentChange,
+      fetchData,
+      toggleTable,
+      showTable,
+      handleDownload,
+      downloadType,
       close() {
         emit('close');
       },
@@ -139,12 +254,10 @@ export default defineComponent({
       }
     };
   }
-
 });
 </script>
 
 <style scoped>
-
 .selected-list-container {
   position: absolute;
   bottom: 0;
@@ -152,7 +265,7 @@ export default defineComponent({
   right: 0;
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
   max-height: 60vh; /* 或足够显示5行数据的高度 */
-  overflow-y: auto; /* 显示滚动条 */
+  overflow: hidden; /* 隐藏默认的滚动条 */
   transform: translateY(100%); /* 默认情况下隐藏 */
   transition: transform 0.3s ease-in-out;
   z-index: 1002; /* 确保弹出层在地图之上 */
@@ -166,17 +279,32 @@ export default defineComponent({
   right: 0; /* 右对齐 */
   bottom: 0; /* 底部对齐 */
   left: 0; /* 左对齐 */
-  max-height: 120vh;
+  max-height: 100vh;
   transform: none; /* 不需要移动 */
 }
-.selected-list-header {
+
+.selected-list-content.minimized {
+  max-height: calc(20vh - 120px); /* 最小化时的高度 */
+}
+.selected-list-header,
+.selected-list-footer {
   display: flex;
   justify-content: space-between;
   padding: 0.5rem 1rem;
   background-color: #f3f3f3;
   align-items: center;
   border-bottom: 1px solid #e1e1e8;
-  font-size: 1.1rem;
+  font-size: 1rem;
+  position: sticky;
+  z-index: 1;
+}
+.selected-list-header {
+  top: 0;
+}
+.selected-list-footer {
+  bottom: 0;
+  position: sticky; /* 确保页脚固定 */
+  z-index: 1;
 }
 .download-options {
   display: inline-block; /* 使下拉菜单与标题同行显示 */
@@ -195,22 +323,35 @@ export default defineComponent({
   cursor: pointer;
   font-size: 1.25rem;
 }
+.selected-list-content {
+  overflow-y: auto;
+  max-height: calc(60vh - 120px); /* 表格部分有滚动条，固定高度，考虑到表头和分页部分的高度 */
+  position: relative;
+}
+.selected-list-content.full-height {
+  max-height: calc(100vh - 120px); /* 表格部分有滚动条，最大化高度 */
+}
 .selected-list-table {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
-  font-size: 0.875rem;
+  font-size: 0.75rem; /* 调小字体大小 */
+  line-height: 1rem; /* 调小行高 */
+  white-space: nowrap; /* 禁用换行 */
 }
 .selected-list-table thead {
   background-color: #f8f9fa;
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 .selected-list-table tbody {
-   max-width: 100%;
-   overflow-x: auto;
+  max-width: 100%;
+  overflow-x: auto;
 }
 .selected-list-table th,
 .selected-list-table td {
-  padding: 0.5rem;
+  padding: 0.25rem; /* 调小填充 */
   border-bottom: 1px solid #e1e1e8;
   background-color: #f8f9fa;
 }
@@ -248,12 +389,12 @@ export default defineComponent({
 .status-reforming {
   color: #ffc107;
 }
-button{
-  border:none;
+button {
+  border: none;
 }
 .fa-xmark, .fa-window-restore, .fa-maximize {
   cursor: pointer;
-  border:none;
+  border: none;
   /* 其他你希望的样式 */
 }
 
@@ -264,4 +405,5 @@ button{
 .fa-xmark:hover {
   color: #e00b0b; /* 当鼠标悬停时改变颜色 */
 }
+
 </style>

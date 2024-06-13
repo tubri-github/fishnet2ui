@@ -24,28 +24,15 @@ export default {
    // const markers = ref([]);
     let map;
     let markersLayer;
-    // // 创建一个添加标记到地图的方法
-    // const addMarkers = (items) => {
-    //   // 确保地图实例存在
-    //   if (!mapContainer.value) return;
-    //
-    //   // 清除已有的标记
-    //   markers.value.forEach(marker => mapContainer.value.removeLayer(marker));
-    //   markers.value = [];
-    //
-    //   // 为每个selectedItem添加标记
-    //   items.forEach(item => {
-    //     const icon = L.divIcon({
-    //       html: '<i class="fa fa-map-pin" aria-hidden="true"></i>',
-    //       className: 'custom-icon',
-    //       iconSize: L.point(20, 20),
-    //       iconAnchor: L.point(10, 20)
-    //     });
-    //
-    //     const marker = L.marker([item.Latitude, item.Longitude], {icon}).addTo(map.value);
-    //     markers.value.push(marker);
-    //   });
-    // };
+    const updateMapFocus = (items) => {
+      const latLngs = items
+          .filter(item => item.Latitude && item.Longitude)
+          .map(item => L.latLng(item.Latitude, item.Longitude));
+      if (latLngs.length) {
+        const bounds = L.latLngBounds(latLngs);
+        map.fitBounds(bounds, { maxZoom: 10 });
+      }
+    };
 
     onMounted(() => {
       // 初始化地图
@@ -54,6 +41,8 @@ export default {
         maxZoom: 18,
         attribution:'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
       }).addTo(map);
+
+
 
       // 初始化时为所有selectedItems添加标记
       //addMarkers(props.selectedItems);
@@ -94,7 +83,7 @@ export default {
     watch(() => props.selectedItems, (newItems) => {
       markersLayer.clearLayers();
       newItems.forEach(item => {
-        if (item.latitude && item.longitude) {
+        if (item.Latitude && item.Longitude) {
           const icon = L.divIcon({
             html: '<i class="fa fa-map-pin" aria-hidden="true"></i>',
             className: 'custom-icon',
@@ -102,11 +91,12 @@ export default {
             iconAnchor: L.point(10, 20)
           });
 
-          L.marker([item.latitude, item.longitude], { icon })
+          L.marker([item.Latitude, item.Longitude], { icon })
               .addTo(markersLayer)
-              .bindPopup(`<b>${item.scientificName}</b><br>${item.locality}`);
+              .bindPopup(`<b>${item.ScientificName}</b><br>${item.Locality}`);
         }
       });
+      updateMapFocus(newItems)
     });
 
     onBeforeUnmount(() => {

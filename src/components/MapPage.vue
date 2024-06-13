@@ -4,7 +4,7 @@
 <!--      <search-box @search="toggleSelectedList"/>-->
       <search-box @search="fetchOccurrences" :polygon="polygon"/>
     </div>
-    <div class="map-area">
+    <div class="map-area" :class="{ 'loading': isLoading }">
       <leaflet-map-component @polygonDrawn="handlePolygonDrawn"  :selectedItems="items"/>
 
       <transition name="slide-up">
@@ -12,7 +12,7 @@
             :isActive="showSelectedList"
             v-if="showSelectedList"
             :selectedItems="items"
-            @close="showSelectedList = false"
+            @download ="handleDownload"
         />
       </transition>
     </div>
@@ -23,6 +23,7 @@
 <script>
 import { ref } from 'vue';
 import api from '@/api/api';
+import debounce from 'lodash/debounce';
 
 import SearchBox from "@/components/SearchBox";
 import LeafletMapComponent from "@/components/LeafletMapComponent";
@@ -448,8 +449,42 @@ export default {
         Longitude: -100.38391
       },
     ]);
+    // const otherData = ref([]);
+    // const additionalInfo = ref([]);
+    // const extraInfo = ref([]);
+    let fparams = ref([]);
+
     const showSelectedList = ref(false);
     const polygon = ref('');
+    const isLoading = ref(false);
+
+    const debouncedFetchOccurrences = debounce(async (params) => {
+      try {
+        isLoading.value = true;
+        const filteredParams = Object.fromEntries(
+            Object.entries(params).filter(([, value]) => value != null && value !== '')
+        );
+        fparams = filteredParams
+        // const [occurrencesResponse, otherDataResponse, additionalInfoResponse, extraInfoResponse] = await Promise.all([
+        const [occurrencesResponse] = await Promise.all([
+          api.getOccurrences(filteredParams),
+          // api.getOtherData(filteredParams),
+          // api.getAdditionalInfo(filteredParams),
+          // api.getExtraInfo(filteredParams)
+        ]);
+
+        items.value = occurrencesResponse.data.occurrences;
+        // otherData.value = otherDataResponse.data;
+        // additionalInfo.value = additionalInfoResponse.data;
+        // extraInfo.value = extraInfoResponse.data;
+        showSelectedList.value = true;
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        alert('Error fetching data');
+      } finally {
+        isLoading.value = false;
+      }
+    }, 500);
 
     function toggleSelectedList() {
       showSelectedList.value = !showSelectedList.value;
@@ -459,15 +494,38 @@ export default {
     }
 
     async function fetchOccurrences(params) {
+      debouncedFetchOccurrences(params);
+    }
+    async function handleDownload({ type, tab }) {
       try {
-        const filteredParams = Object.fromEntries(
-            Object.entries(params).filter(([, value]) => value != null && value !== '')
-        );
-        const response = await api.getOccurrences(filteredParams);
-        items.value = response.data.occurrences;
-        showSelectedList.value = true;
+        let response;
+        switch (tab) {
+          case 'dataTable':
+            response = await api.getOccurrences({ ...fparams,... {num:null, fmt: type, att:1} });
+            break;
+        }
+        const blob = new Blob([response.data], { type: response.headers['content-type'] });
+
+        // 提取文件名
+        const contentDisposition = response.headers['content-disposition'];
+        let fileName = 'data.csv'; // 默认文件名
+        console.log(contentDisposition)
+        if (contentDisposition && contentDisposition.indexOf('attachment') !== -1) {
+          const match = contentDisposition.match(/filename="(.+)"/);
+          console.log(match)
+          if (match && match[1]) {
+            fileName = match[1];
+          }
+        }
+
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = fileName;
+        link.click();
+        URL.revokeObjectURL(link.href);
       } catch (error) {
-        console.error('Error fetching occurrences:', error);
+        console.error('Error downloading file:', error);
+        alert('Error downloading file');
       }
     }
 
@@ -492,7 +550,9 @@ export default {
       showSelectedList,
       handlePolygonDrawn,
       fetchOccurrences,
-      polygon
+      handleDownload,
+      polygon,
+      isLoading,
     };
   },
 }
@@ -503,6 +563,10 @@ export default {
   /*position: relative;*/
   height: 100vh;
   display: flex;
+}
+.map-area.loading {
+  pointer-events: none;
+  opacity: 0.5;
 }
 .search-area {
   flex: 1; /* 占据1/3的宽度 */

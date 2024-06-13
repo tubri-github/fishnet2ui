@@ -16,6 +16,7 @@
     "element-plus": "^2.7.3",
     "leaflet": "^1.9.4",
     "leaflet-draw": "^1.0.4",
+    "lodash": "^4.17.21",
     "vue": "^3.2.13",
     "vue-router": "^4.3.0"
   },
