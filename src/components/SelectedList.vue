@@ -63,7 +63,6 @@
         <table class="selected-list-table">
           <thead>
           <tr>
-            <th></th>
             <th>Basis Of Record</th>
             <th>Catalog Number</th>
             <th>Collection Code</th>
@@ -97,7 +96,6 @@
           </thead>
           <tbody>
           <tr v-for="item in selectedItems" :key="item.CatalogNumber">
-            <td><input type="checkbox" :checked="item.selected" /></td>
             <td>{{ item.BasisOfRecord }}</td>
             <td>{{ item.CatalogNumber }}</td>
             <td>{{ item.CollectionCode }}</td>

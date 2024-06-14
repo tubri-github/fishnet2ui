@@ -98,9 +98,6 @@ export default {
       if (props.showPaginationButtons) {
         addPaginationControls();
       }
-
-      window.addEventListener('resize', updatePaginationControlPosition);
-      updatePaginationControlPosition();
     });
 
     const addPaginationControls = () => {
@@ -123,7 +120,7 @@ export default {
 
           const pageInfo = L.DomUtil.create('span', 'page-info', paginationContainer);
           pageInfo.id ='page-info'
-          pageInfo.innerHTML = `Page ${props.currentPage} of ${props.totalPages} (${props.resultsPlotted} results plotted)`;
+          pageInfo.innerHTML = `Page ${props.currentPage} of ${props.totalPages}`;
 
           const nextButton = L.DomUtil.create('a', 'leaflet-control-button', paginationContainer);
           nextButton.innerHTML = '&raquo;';
@@ -148,7 +145,7 @@ export default {
     const updatePaginationInfo = () => {
       const pageInfo = document.getElementById('page-info');
       if (pageInfo) {
-        pageInfo.innerHTML = `Page ${props.currentPage} of ${props.totalPages} (${props.resultsPlotted} results plotted)`;
+        pageInfo.innerHTML = `Page ${props.currentPage} of ${props.totalPages}`;
       }
     };
 
@@ -180,24 +177,12 @@ export default {
       updateMapFocus(newItems)
     });
 
-    const updatePaginationControlPosition = () => {
-      const paginationContainer = document.querySelector('.pagination-container');
-      if (paginationContainer) {
-        const mapWidth = map.getSize().x;
-        const containerWidth = paginationContainer.offsetWidth;
-        const leftOffset = (mapWidth - containerWidth) / 2;
-        paginationContainer.style.left = '50%';
-        paginationContainer.style.transform = `translateX(-${leftOffset}px)`;
-      }
-    };
-
     onBeforeUnmount(() => {
       // 组件卸载前清理地图
       if (map) {
         map.remove();
         map = null;
       }
-      window.removeEventListener('resize', updatePaginationControlPosition);
     });
     const goToPreviousPage = () => {
       emit('changePage', { direction: 'prev' });
@@ -258,6 +243,7 @@ export default {
 .leaflet-right{
   left: 50%;
   transform: translateX(-50%);
+  right: auto;
 }
 .pagination-container {
   display: flex;
@@ -269,6 +255,7 @@ export default {
   position: absolute;
   top: 10px;
   z-index: 1000;
+  transform: translateX(-50%);
 }
 
 

@@ -8,15 +8,15 @@
         <p>Default behavior for all services</p>
         <ul>
           <li>All FishNet2 services provide comma-separated value (csv) formatted output.</li>
-          <li>Tab-delimited formatted text is supported with the &format=txt parameter (<a href="#">more information</a>).</li>
+          <li>Tab-delimited formatted text is supported with the &format=txt parameter (<a href="#allOption">more information</a>).</li>
           <li>Services will return all rows matching the query parameters.</li>
           <li>The column names will appear as the first row output. For the Taxa, Providers and Occurrences services, if no occurrences or rows match the query, the 'column headers' row will be the only row returned.</li>
           <li>Services will return error messages for the following reasons:
             <ul>
-              <li>Missing or incorrect key (use &key for more information).</li>
-              <li>Failure to include at least one of the required query parameters (<a href="#">more information</a>).</li>
-              <li>Missing or incorrectly-formatted WKT provided for the Geometry parameter value (<a href="#">more information</a>).</li>
-              <li>Missing or incorrectly-formatted date you provided for the Date Range parameter (<a href="#">more information</a>).</li>
+              <li>Missing or incorrect Api key (<a href="#apikey"> more information</a>).</li>
+              <li>Failure to include at least one of the required query parameters (<a href="#allReq">more information</a>).</li>
+              <li>Missing or incorrectly-formatted WKT provided for the Geometry parameter value (<a href="#geo">more information</a>).</li>
+              <li>Missing or incorrectly-formatted date you provided for the Date Range parameter (<a href="#dr">more information</a>).</li>
             </ul>
           </li>
         </ul>
@@ -98,16 +98,16 @@
         </p>
       </section>
 
-      <section class="section">
+      <section class="section" id="apikey">
         <h2>Parameters</h2>
         <h3>Required API Key Parameter</h3>
-        <p><b>API Key:</b> All FishNet2 services require the &key parameter. Without a valid &key parameter, your query will not be processed. Please go to <a href="http://www.fishnet2.net/api/v1/keys/">http://www.fishnet2.net/api/v1/keys/</a> for a key.</p>
+        <p><b>API Key:</b> All FishNet2 services require the &key parameter. Without a valid &key parameter, your query will not be processed. Yasin Bakis at <a href="mailto:ybakis@tulane.edu">ybakis@tulane.edu</a> for a key.</p>
         <p><b>Format:</b> <a href="http://www.fishnet2.net/api/v1/keys/?key=MYKEY">http://www.fishnet2.net/api/v1/keys/?key=MYKEY</a></p>
       </section>
 
-      <section class="section">
-        <h3>Query parameters for all services</h3>
-        <p><b>REQUIRED:</b> At least one of the following parameters is required, though any or all can be permitted in a single query.</p>
+      <section class="section" id="allReq">
+        <h3 >Query parameters for all services</h3>
+        <p><b >REQUIRED:</b> At least one of the following parameters is required, though any or all can be permitted in a single query.</p>
         <ul>
           <li><b>Taxon:</b> Use this to search scientific and family names. It supports the 'OR' operator, permitting the search of multiple taxa with one query.
             <br> <b>Format:</b> <a href="http://www.fishnet2.net/api/v1/taxa/?key=MYKEY&genus=cynodon&species=spilotus">http://www.fishnet2.net/api/v1/taxa/?key=MYKEY&genus=cynodon&species=spilotus</a>
@@ -121,22 +121,25 @@
             <br> <b>Format:</b> <a href="http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&catalog_number=12345">http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&catalog_number=12345</a>
             <br> <b>Examples:</b> <a href="http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&catalog_number=54321">http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&catalog_number=54321</a>
           </li>
+          <section id="dr">
           <li><b>Date Range:</b> Dates are given by the year or by the year and month for ranges of interest. Date ranges must be in YYYY-MM format.
             <br> <b>Format:</b> <a href="http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&start_date=2000&end_date=2020">http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&start_date=2000&end_date=2020</a>
             <br> <b>Examples:</b> <a href="http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&start_date=1990&end_date=2000">http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&start_date=1990&end_date=2000</a>
-          </li>
+          </li></section>
           <li><b>Other:</b> Use this to search for terms of interest that may be in the remarks, notes, scientific name, collectors, preparation type, location fields or elsewhere in the occurrence. It supports the 'OR' operator, permitting the search of multiple terms with one query.
             <br> <b>Format:</b> <a href="http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&other=remarks">http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&other=remarks</a>
             <br> <b>Examples:</b> <a href="http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&other=collector">http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&other=collector</a>
           </li>
-          <li><b>Geometry:</b> Records within a geographic area defined by one of the available maps. Maps are designated by MapIDs (see <a href="http://www.fishnet2.net/api/v1/availablemaps/">AvailableMaps</a> for a list of valid MapIDs). Note that the Map parameter and the Geometry parameter (see above) are mutually exclusive. If both are submitted, the Map parameter will be ignored.
-            <br> <b>Format:</b> <a href="http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&geometry=POLYGON((...))">http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&geometry=POLYGON((...))</a>
-            <br> <b>Examples:</b> <a href="http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&geometry=POLYGON((-112,45,-100,45,-100,40,-112,40,-112,45))">http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&geometry=POLYGON((-112,45,-100,45,-100,40,-112,40,-112,45))</a>
-          </li>
+          <section id="geo">
+            <li><b>Geometry:</b> Records within a geographic area defined by one of the available maps. Maps are designated by MapIDs (see <a href="http://www.fishnet2.net/api/v1/availablemaps/">AvailableMaps</a> for a list of valid MapIDs). Note that the Map parameter and the Geometry parameter (see above) are mutually exclusive. If both are submitted, the Map parameter will be ignored.
+              <br> <b>Format:</b> <a href="http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&geometry=POLYGON((...))">http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&geometry=POLYGON((...))</a>
+              <br> <b>Examples:</b> <a href="http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&geometry=POLYGON((-112,45,-100,45,-100,40,-112,40,-112,45))">http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&geometry=POLYGON((-112,45,-100,45,-100,40,-112,40,-112,45))</a>
+            </li>
+          </section>
         </ul>
       </section>
 
-      <section class="section">
+      <section class="section" id="allOption">
         <h3>Optional parameters</h3>
         <p>The following parameters are optional, and may be added to any query that also includes the required parameters.</p>
         <ul>

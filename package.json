@@ -17,8 +17,10 @@
     "leaflet": "^1.9.4",
     "leaflet-draw": "^1.0.4",
     "lodash": "^4.17.21",
+    "streamsaver": "^2.0.6",
     "vue": "^3.2.13",
-    "vue-router": "^4.3.0"
+    "vue-router": "^4.3.0",
+    "web-streams-polyfill": "^4.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

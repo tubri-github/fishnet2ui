@@ -1,7 +1,7 @@
 <template>
   <agreement-modal></agreement-modal>
   <div class="search-box">
-    <form @submit.prevent="onSearch">
+    <form @submit.prevent="validateAndSearch">
       <div class="input-group">
         <label for="taxon">Taxon</label>
         <input type="text" id="taxon" v-model="searchFields.t" />
@@ -69,9 +69,10 @@
         <label for="polygon">Search Polygon</label>
         <input type="text" id="polygon" v-model="searchFields.p" placeholder="Paste WKT or select from menu" />
       </div>
+      <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
 
       <div class="actions">
-        <button type="submit" @click="search">Search</button>
+        <button type="submit">Search</button>
       </div>
     </form>
   </div>
@@ -121,6 +122,7 @@ export default {
 
     const showLocationTooltip = ref(false);
     const showDropdown = ref(false);
+    const errorMessage = ref('');
 
     const handleClickOutside = (event) => {
       const tooltip = document.querySelector('.tooltip');
@@ -128,6 +130,7 @@ export default {
         showLocationTooltip.value = false;
       }
     };
+
     const handleInputClick = (event) => {
       event.stopPropagation();
       showLocationTooltip.value = true;
@@ -165,6 +168,24 @@ export default {
       showDropdown.value = false;
     }
 
+    function validateAndSearch() {
+      // 验证至少一个输入框有值
+      console.log("d")
+      if (
+          !searchFields.value.t &&
+          !searchFields.value.l &&
+          !searchFields.value.c &&
+          !searchFields.value.d &&
+          !searchFields.value.q &&
+          !searchFields.value.p
+      ) {
+        errorMessage.value = 'At least one search field must be filled.';
+      } else {
+        errorMessage.value = '';
+        onSearch();
+      }
+    }
+
 
 
 
@@ -186,6 +207,8 @@ export default {
       showDropdown,
       selectCode,
       handleInputClick,
+      errorMessage,
+      validateAndSearch
     };
   }
 };
@@ -374,5 +397,11 @@ button:hover {
     left: 10%;
     transform: none;
   }
+}
+
+.error-message {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 10px;
 }
 </style>

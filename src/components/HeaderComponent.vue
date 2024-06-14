@@ -46,6 +46,7 @@ export default {
   left: 0;
   width: 100%;
   z-index: 1000; /* 确保头部在其他内容之上 */
+  height: 60px;
   /* 其他样式 */
 }
 .logo {

@@ -40,6 +40,9 @@ import debounce from 'lodash/debounce';
 import SearchBox from "@/components/SearchBox";
 import LeafletMapComponent from "@/components/LeafletMapComponent";
 import SelectedList from "@/components/SelectedList";
+import streamSaver from 'streamsaver';
+import 'web-streams-polyfill/dist/polyfill.es5';
+
 export default {
   name: "MapPage.vue",
   components:{
@@ -156,48 +159,224 @@ export default {
         isLoading.value = false;
       }
     }
+    // const downloadFile = async ({ type, tab}) => {
+    //   try {
+    //     const fparams = { /* 替换为你的参数 */ };
+    //     await handle2Download({ ...{ type, tab}, fparams });
+    //   } catch (error) {
+    //     console.error('Download failed', error);
+    //   }
+    // };
+    // const handle2Download = ({ type, tab, fparams }) => {
+    //   return new Promise((resolve, reject) => {
+    //     let url;
+    //     switch (tab) {
+    //       case 'dataTable':
+    //         url = `${process.env.VUE_APP_API_BASE_URL}/occurrence`;
+    //         break;
+    //       case 'otherData':
+    //         url = `${process.env.VUE_APP_API_BASE_URL}/taxa`;
+    //         break;
+    //       case 'additionalInfo':
+    //         url = `${process.env.VUE_APP_API_BASE_URL}/providers`;
+    //         break;
+    //       case 'extraInfo':
+    //         url = `${process.env.VUE_APP_API_BASE_URL}/location`;
+    //         break;
+    //       default:
+    //         throw new Error('Invalid tab type');
+    //     }
+    //     let currParams = { ...fparams,...{ fmt: type, att: 1 }}
+    //     delete currParams.num;
+    //     const params = new URLSearchParams(currParams);
+    //
+    //     const fetchUrl = `${url}/?${params.toString()}`;
+    //     const fileName = 'data.csv'; // 默认文件名
+    //     const workerBlob = new Blob([`
+    //       self.onmessage = async (event) => {
+    //         const { url, fileName } = event.data;
+    //         importScripts('https://unpkg.com/streamsaver@2.0.6/StreamSaver.js');
+    //         importScripts('https://cdn.jsdelivr.net/npm/web-streams-polyfill@3.1.1/dist/ponyfill.min.js');
+    //
+    //         try {
+    //           const response = await fetch(url);
+    //
+    //           if (!response.ok) {
+    //             throw new Error('Network response was not ok');
+    //           }
+    //
+    //           const contentDisposition = response.headers.get('content-disposition');
+    //           let finalFileName = fileName;
+    //           if (contentDisposition && contentDisposition.indexOf('attachment') !== -1) {
+    //             const match = contentDisposition.match(/filename="(.+)"/);
+    //             if (match && match[1]) {
+    //               finalFileName = match[1];
+    //             }
+    //           }
+    //
+    //           const fileStream = streamSaver.createWriteStream(finalFileName, {
+    //             size: parseInt(response.headers.get('content-length'), 10),
+    //           });
+    //
+    //           const readableStream = response.body;
+    //
+    //           if (self.WritableStream && readableStream.pipeTo) {
+    //             await readableStream.pipeTo(fileStream);
+    //           } else {
+    //             const writer = fileStream.getWriter();
+    //             const reader = readableStream.getReader();
+    //             const pump = () =>
+    //               reader.read().then(({ done, value }) => {
+    //                 if (done) {
+    //                   writer.close();
+    //                   return;
+    //                 }
+    //                 writer.write(value).then(pump);
+    //               });
+    //
+    //             pump();
+    //           }
+    //
+    //           self.postMessage({ success: true });
+    //         } catch (error) {
+    //           self.postMessage({ success: false, error: error.message });
+    //         }
+    //       };
+    //     `], { type: 'application/javascript' });
+    //
+    //     const workerUrl = URL.createObjectURL(workerBlob);
+    //     const worker = new Worker(workerUrl);
+    //
+    //     worker.postMessage({ url: fetchUrl, fileName });
+    //
+    //     worker.onmessage = (event) => {
+    //       URL.revokeObjectURL(workerUrl);
+    //       if (event.data.success) {
+    //         resolve();
+    //       } else {
+    //         reject(new Error(event.data.error));
+    //       }
+    //     };
+    //
+    //     worker.onerror = (error) => {
+    //       URL.revokeObjectURL(workerUrl);
+    //       reject(error);
+    //     };
+    //   });
+    // };
 
     async function handleDownload({ type, tab }) {
       try {
-        let response;
+        let url;
         switch (tab) {
           case 'dataTable':
-            response = await api.getOccurrences({ ...fparams,... {num:null, fmt: type, att:1} });
+            url = `${process.env.VUE_APP_API_BASE_URL}/occurrence`;
             break;
           case 'otherData':
-            response = await api.getTaxas({ ...fparams,... {num:null, fmt: type, att:1} });
+            url = `${process.env.VUE_APP_API_BASE_URL}/taxa`;
             break;
           case 'additionalInfo':
-            response = await api.getProviders({ ...fparams,... {num:null, fmt: type, att:1} });
+            url = `${process.env.VUE_APP_API_BASE_URL}/providers`;
             break;
           case 'extraInfo':
-            response = await api.getLocaton({ ...fparams,... {num:null, fmt: type, att:1} });
+            url = `${process.env.VUE_APP_API_BASE_URL}/location`;
             break;
+          default:
+            throw new Error('Invalid tab type');
         }
-        const blob = new Blob([response.data], { type: response.headers['content-type'] });
+        let currParams = { ...fparams,...{ fmt: type, att: 1 }}
+        delete currParams.num;
+        const params = new URLSearchParams(currParams);
+        const response = await fetch(`${url}/?${params.toString()}`, {
+          method: 'GET',
+        });
 
-        // 提取文件名
-        const contentDisposition = response.headers['content-disposition'];
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const contentDisposition = response.headers.get('content-disposition');
         let fileName = 'data.csv'; // 默认文件名
-        console.log(contentDisposition)
         if (contentDisposition && contentDisposition.indexOf('attachment') !== -1) {
           const match = contentDisposition.match(/filename="(.+)"/);
-          console.log(match)
           if (match && match[1]) {
             fileName = match[1];
           }
         }
 
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = fileName;
-        link.click();
-        URL.revokeObjectURL(link.href);
+        const fileStream = streamSaver.createWriteStream(fileName, {
+          size: parseInt(response.headers.get('content-length'), 10), // 可选
+        });
+
+        const readableStream = response.body;
+
+        if (window.WritableStream && readableStream.pipeTo) {
+          // 更现代的浏览器
+          await readableStream.pipeTo(fileStream);
+          console.log('Download complete');
+        } else {
+          // 旧版浏览器
+          const writer = fileStream.getWriter();
+          const reader = readableStream.getReader();
+          const pump = () =>
+              reader.read().then(({ done, value }) => {
+                if (done) {
+                  writer.close();
+                  return;
+                }
+                writer.write(value).then(pump);
+              });
+
+          pump();
+        }
       } catch (error) {
         console.error('Error downloading file:', error);
         alert('Error downloading file');
       }
     }
+
+
+    // async function handleDownload({ type, tab }) {
+    //   try {
+    //     let response;
+    //     switch (tab) {
+    //       case 'dataTable':
+    //         response = await api.getOccurrences({ ...fparams,... {num:null, fmt: type, att:1} });
+    //         break;
+    //       case 'otherData':
+    //         response = await api.getTaxas({ ...fparams,... {num:null, fmt: type, att:1} });
+    //         break;
+    //       case 'additionalInfo':
+    //         response = await api.getProviders({ ...fparams,... {num:null, fmt: type, att:1} });
+    //         break;
+    //       case 'extraInfo':
+    //         response = await api.getLocaton({ ...fparams,... {num:null, fmt: type, att:1} });
+    //         break;
+    //     }
+    //     const blob = new Blob([response.data], { type: response.headers['content-type'] });
+    //
+    //     // 提取文件名
+    //     const contentDisposition = response.headers['content-disposition'];
+    //     let fileName = 'data.csv'; // 默认文件名
+    //     console.log(contentDisposition)
+    //     if (contentDisposition && contentDisposition.indexOf('attachment') !== -1) {
+    //       const match = contentDisposition.match(/filename="(.+)"/);
+    //       console.log(match)
+    //       if (match && match[1]) {
+    //         fileName = match[1];
+    //       }
+    //     }
+    //
+    //     const link = document.createElement('a');
+    //     link.href = URL.createObjectURL(blob);
+    //     link.download = fileName;
+    //     link.click();
+    //     URL.revokeObjectURL(link.href);
+    //   } catch (error) {
+    //     console.error('Error downloading file:', error);
+    //     alert('Error downloading file');
+    //   }
+    // }
 
 
     function search() {

@@ -37,7 +37,7 @@
           <h3>Status</h3>
           <p>The georeferencing phase has been completed and we are now in the process of data repatriation.</p>
 
-          <p> <a href="#">Project results now available.</a></p>
+          <p> <a href="repatriation">Project results now available.</a></p>
         </el-main>
       </el-col>
       <el-col :span="10">

@@ -7,23 +7,34 @@
         <div class="funding-item">
           <img src="@/assets/funding/nsf1_100x101.gif" alt="NSF Logo" class="funding-logo">
           <div>
-            <p>The <a href="#">National Science Foundation (NSF)</a></p>
+            <p>The <a href="http://www.nsf.gov/">National Science Foundation (NSF)</a></p>
             <ul>
               <li>Collaborative Research: CSBR: Natural History Collections: Georeferencing U.S. Fish Collections: a community-based model to georeference natural history collections
-                <br> Award Numbers: <a href="#">DBI 1203120</a>, <a href="#">DBI 1203137</a>, <a href="#">DBI 1203453</a>, <a href="#">DBI 1202933</a>, <a href="#">DBI 1203462</a>, <a href="#">DBI 1202920</a>, <a href="#">DBI 1203106</a>, <a href="#">DBI 1203050</a>, <a href="#">DBI 1203032</a>, <a href="#">DBI 1202663</a>, <a href="#">DBI 1203382</a> and <a href="#">DBI 1203053</a>
+                <br> Award Numbers: <a href="http://nsf.gov/awardsearch/showAward?AWD_ID=1203120&HistoricalAwards=false">DBI 1203120</a>,
+                <a href="http://nsf.gov/awardsearch/showAward?AWD_ID=1203137&HistoricalAwards=false">DBI 1203137</a>,
+                <a href="http://nsf.gov/awardsearch/showAward?AWD_ID=1203453&HistoricalAwards=false">DBI 1203453</a>,
+                <a href="http://nsf.gov/awardsearch/showAward?AWD_ID=1202953&HistoricalAwards=false">DBI 1202933</a>,
+                <a href="http://nsf.gov/awardsearch/showAward?AWD_ID=1203462&HistoricalAwards=false">DBI 1203462</a>,
+                <a href="http://nsf.gov/awardsearch/showAward?AWD_ID=1202920&HistoricalAwards=false">DBI 1202920</a>,
+                <a href="http://nsf.gov/awardsearch/showAward?AWD_ID=1203106&HistoricalAwards=false">DBI 1203106</a>,
+                <a href="http://nsf.gov/awardsearch/showAward?AWD_ID=1203050&HistoricalAwards=false">DBI 1203050</a>,
+                <a href="http://nsf.gov/awardsearch/showAward?AWD_ID=1203032&HistoricalAwards=false">DBI 1203032</a>,
+                <a href="http://nsf.gov/awardsearch/showAward?AWD_ID=1202663&HistoricalAwards=false">DBI 1202663</a>,
+                <a href="http://nsf.gov/awardsearch/showAward?AWD_ID=1203382&HistoricalAwards=false#">DBI 1203382</a>
+                and <a href="http://nsf.gov/awardsearch/showAward?AWD_ID=1203053&HistoricalAwards=false">DBI 1203053</a>
               </li>
               <li>RAPID: Enhancement of Fishnet2 for Disaster Impact Assessment
-                <br> Award Number: <a href="#">DBI 1045668</a>
+                <br> Award Number: <a href="http://nsf.gov/awardsearch/showAward?AWD_ID=1045668&HistoricalAwards=false">DBI 1045668</a>
               </li>
               <li>Collaborative Research: Building the Information Community Infrastructure - A Test Case Implementation for Ichthyological Collections
-                <br> Award Numbers: <a href="#">DBI 0417001</a> and <a href="#">DBI 0415600</a>
+                <br> Award Numbers: <a href="http://nsf.gov/awardsearch/showAward?AWD_ID=0417001&HistoricalAwards=false">DBI 0417001</a> and <a href="http://nsf.gov/awardsearch/showAward?AWD_ID=0415600&HistoricalAwards=false">DBI 0415600</a>
               </li>
             </ul>
           </div>
         </div>
         <div class="funding-item">
           <img src="@/assets/funding/Nbii_logo.gif" alt="NBII Logo" class="funding-logo">
-          <p>The <a href="#">National Biological Information Infrastructure (NBII)</a></p>
+          <p>The <a href="https://www.wikiwand.com/en/NBII">National Biological Information Infrastructure (NBII)</a></p>
         </div>
       </section>
 
@@ -32,29 +43,29 @@
         <div class="funding-item">
           <img src="@/assets/funding/nsf1_100x101.gif" alt="NSF Logo" class="funding-logo">
           <div>
-            <p>The <a href="#">National Science Foundation (NSF)</a></p>
+            <p>The <a href="http://www.nsf.gov/">National Science Foundation (NSF)</a></p>
             <ul>
               <li>(SGER) A Predictive Data Network for Fish Diversity: The FISHNET Prototype System
-                <br> Award Number: <a href="#">DEB 9985737</a>
+                <br> Award Number: <a href="http://nsf.gov/awardsearch/showAward?AWD_ID=9985737&HistoricalAwards=false">DEB 9985737</a>
               </li>
             </ul>
           </div>
         </div>
         <div class="funding-item">
           <img src="@/assets/funding/small-nopp-logo.gif" alt="Nopp Logo" class="funding-logo">
-          <p><a href="#">The National Oceanographic Partnership Program</a></p>
+          <p><a href="http://www.coreocean.org/Dev2Go.web?Anchor=nopp_home_page">The National Oceanographic Partnership Program</a></p>
         </div>
         <div class="funding-item">
           <img src="@/assets/funding/onr.jpg" alt="ONR Logo" class="funding-logo">
-          <p><a href="#">The Office of Naval Research</a></p>
+          <p><a href="http://www.onr.navy.mil/">The Office of Naval Research</a></p>
         </div>
         <div class="funding-item">
           <img src="@/assets/funding/coreLogo.jpg" alt="CORE Logo" class="funding-logo">
-          <p><a href="#">Consortium of Oceanographic Research and Education</a></p>
+          <p><a href="http://www.coreocean.org/">Consortium of Oceanographic Research and Education</a></p>
         </div>
         <div class="funding-item">
           <img src="@/assets/funding/small-coml-logo.gif" alt="Census of Marine Life Logo" class="funding-logo">
-          <p><a href="#">Census of Marine Life</a></p>
+          <p><a href="http://www.coreocean.org/Dev2Go.web?anchor=coml_home_page">Census of Marine Life</a></p>
         </div>
       </section>
     </el-main>
