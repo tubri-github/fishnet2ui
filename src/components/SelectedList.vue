@@ -63,68 +63,68 @@
         <table class="selected-list-table">
           <thead>
           <tr>
-            <th>Basis Of Record</th>
-            <th>Catalog Number</th>
-            <th>Collection Code</th>
-            <th>Collector</th>
-            <th>Coordinate Uncertainty (meters)</th>
-            <th>Country</th>
-            <th>County</th>
-            <th>Date Last Modified</th>
-            <th>Day Collected</th>
+            <th>InstitutionCode</th>
+            <th>CollectionCode</th>
+            <th>CatalogNumber</th>
+            <th>IndividualCount</th>
+            <th>ScientificName</th>
             <th>Family</th>
-            <th>Georef Method</th>
-            <th>Horizontal Datum</th>
-            <th>Individual Count</th>
-            <th>Institution Code</th>
-            <th>Island</th>
-            <th>Island Group</th>
-            <th>Lat/Long Comments</th>
-            <th>Latitude</th>
-            <th>Locality</th>
-            <th>Longitude</th>
-            <th>Month Collected</th>
-            <th>Preparation Type</th>
-            <th>Remarks</th>
-            <th>Scientific Name</th>
-            <th>State/Province</th>
+            <th>PreparationType</th>
             <th>Tissues</th>
-            <th>Verbatim Depth</th>
-            <th>Verbatim Elevation</th>
-            <th>Year Collected</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>CoordinateUncertaintyInMeters</th>
+            <th>HorizontalDatum</th>
+            <th>Country</th>
+            <th>StateProvince</th>
+            <th>County</th>
+            <th>Island</th>
+            <th>IslandGroup</th>
+            <th>Locality</th>
+            <th>VerbatimElevation</th>
+            <th>VerbatimDepth</th>
+            <th>YearCollected</th>
+            <th>MonthCollected</th>
+            <th>DayCollected</th>
+            <th>Collector</th>
+            <th>GeorefMethod</th>
+            <th>LatLongComments</th>
+            <th>BasisOfRecord</th>
+            <th>Remarks</th>
+            <th>DateLastModified</th>
           </tr>
           </thead>
           <tbody>
           <tr v-for="item in selectedItems" :key="item.CatalogNumber">
-            <td>{{ item.BasisOfRecord }}</td>
-            <td>{{ item.CatalogNumber }}</td>
-            <td>{{ item.CollectionCode }}</td>
-            <td>{{ item.Collector }}</td>
-            <td>{{ item.CoordinateUncertaintyInMeters }}</td>
-            <td>{{ item.Country }}</td>
-            <td>{{ item.County }}</td>
-            <td>{{ item.DateLastModified }}</td>
-            <td>{{ item.DayCollected }}</td>
-            <td>{{ item.Family }}</td>
-            <td>{{ item.GeorefMethod }}</td>
-            <td>{{ item.HorizontalDatum }}</td>
-            <td>{{ item.IndividualCount }}</td>
             <td>{{ item.InstitutionCode }}</td>
+            <td>{{ item.CollectionCode }}</td>
+            <td>{{ item.CatalogNumber }}</td>
+            <td>{{ item.IndividualCount }}</td>
+            <td>{{ item.ScientificName }}</td>
+            <td>{{ item.Family }}</td>
+            <td>{{ item.PreparationType }}</td>
+            <td>{{ item.Tissues }}</td>
+            <td>{{ item.Latitude }}</td>
+            <td>{{ item.Longitude }}</td>
+            <td>{{ item.CoordinateUncertaintyInMeters }}</td>
+            <td>{{ item.HorizontalDatum }}</td>
+            <td>{{ item.Country }}</td>
+            <td>{{ item.StateProvince }}</td>
+            <td>{{ item.County }}</td>
             <td>{{ item.Island }}</td>
             <td>{{ item.IslandGroup }}</td>
-            <td>{{ item.LatLongComments }}</td>
-            <td>{{ item.Latitude }}</td>
             <td>{{ item.Locality }}</td>
-            <td>{{ item.Longitude }}</td>
-            <td>{{ item.MonthCollected }}</td>
-            <td>{{ item.PreparationType }}</td>
-            <td>{{ item.Remarks }}</td>
-            <td>{{ item.ScientificName }}</td>
-            <td>{{ item.StateProvince }}</td>
-            <td>{{ item.Tissues }}</td>
-            <td>{{ item.VerbatimDepth }}</td>
             <td>{{ item.VerbatimElevation }}</td>
+            <td>{{ item.VerbatimDepth }}</td>
             <td>{{ item.YearCollected }}</td>
+            <td>{{ item.MonthCollected }}</td>
+            <td>{{ item.DayCollected }}</td>
+            <td>{{ item.Collector }}</td>
+            <td>{{ item.GeorefMethod }}</td>
+            <td>{{ item.LatLongComments }}</td>
+            <td>{{ item.BasisOfRecord }}</td>
+            <td>{{ item.Remarks }}</td>
+            <td>{{ item.DateLastModified }}</td>
           </tr>
           </tbody>
         </table>
@@ -133,7 +133,6 @@
         <table class="selected-list-table">
           <thead>
           <tr>
-            <th></th>
             <th>ScientificName</th>
             <th>Num Records</th>
             <th>EoL Search</th>
@@ -142,11 +141,10 @@
           </thead>
           <tbody>
           <tr v-for="item in otherData" :key="item.ScientificName">
-            <td><input type="checkbox" :checked="item.selected" /></td>
             <td>{{ item.ScientificName }}</td>
             <td>{{ item.NumRecords }}</td>
-            <td><a href="http://www.eol.org/search?q={{ item.ScientificName }}" target="_blank">Search Encyclopedia of Life</a></td>
-            <td><a href="http://www.morphbank.net/?keywords={{ item.NumRecords }}" target="_blank">Search Morph Bank</a></td>
+            <td><a :href="'http://www.eol.org/search?q=' + item.ScientificName " target="_blank">Search Encyclopedia of Life</a></td>
+            <td><a :href="'http://www.morphbank.net/?keywords=' +  item.ScientificName " target="_blank">Search Morph Bank</a></td>
           </tr>
           </tbody>
         </table>
@@ -155,7 +153,6 @@
         <table class="selected-list-table">
           <thead>
           <tr>
-            <th></th>
             <th>Institution</th>
             <th>InstitutionCode</th>
             <th>Num Records</th>
@@ -163,7 +160,6 @@
           </thead>
           <tbody>
           <tr v-for="item in additionalInfo" :key="item.InstitutionCode">
-            <td><input type="checkbox" :checked="item.selected" /></td>
             <td>{{ item.Institution }}</td>
             <td>{{ item.InstitutionCode }}</td>
             <td>{{ item.NumRecords }}</td>
@@ -175,7 +171,6 @@
         <table class="selected-list-table">
           <thead>
           <tr>
-            <th></th>
             <th>Country</th>
             <th>StateProvince</th>
             <th>County</th>
@@ -187,7 +182,6 @@
           </thead>
           <tbody>
           <tr v-for="item in extraInfo" :key="item.InstitutionCode">
-            <td><input type="checkbox" :checked="item.selected" /></td>
             <td>{{ item.Country }}</td>
             <td>{{ item.StateProvince }}</td>
             <td>{{ item.County }}</td>
@@ -475,11 +469,12 @@ export default defineComponent({
 }
 .selected-list-content {
   overflow-y: auto;
-  max-height: calc(60vh - 120px); /* 表格部分有滚动条，固定高度，考虑到表头和分页部分的高度 */
+  overflow-x: auto;
+  max-height: calc(60vh - 150px); /* 表格部分有滚动条，固定高度，考虑到表头和分页部分的高度 */
   position: relative;
 }
 .selected-list-content.full-height {
-  max-height: calc(100vh - 120px); /* 表格部分有滚动条，最大化高度 */
+  max-height: calc(100vh - 150px); /* 表格部分有滚动条，最大化高度 */
 }
 .selected-list-table {
   width: 100%;

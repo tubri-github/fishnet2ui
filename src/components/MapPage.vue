@@ -104,8 +104,8 @@ export default {
         paginationData.value.extraInfoTotal = extraInfoResponse.data.total;
         showSelectedList.value = true;
       } catch (error) {
-        console.error('Error fetching data:', error);
-        alert('Error fetching data');
+        // console.error('Error fetching data:', error);
+        alert(error.message);
       } finally {
         isLoading.value = false;
       }
@@ -121,6 +121,7 @@ export default {
     async function fetchOccurrences(params) {
       debouncedFetchOccurrences(params);
     }
+
 
 
     async function fetchPageData({ page, size, tab }) {
@@ -153,8 +154,7 @@ export default {
             break;
         }
       } catch (error) {
-        console.error('Error fetching page data:', error);
-        alert('Error fetching page data');
+        alert(error.message);
       } finally {
         isLoading.value = false;
       }
@@ -427,7 +427,7 @@ export default {
 <style scoped>
 .map-view {
   /*position: relative;*/
-  height: 100vh;
+  height: 90vh;
   display: flex;
 }
 .map-area.loading {

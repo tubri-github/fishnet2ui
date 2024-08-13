@@ -39,14 +39,14 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 20px;
+  padding: 0 10px 0 10px;
   background-color: #fafafa;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 1000; /* 确保头部在其他内容之上 */
-  height: 60px;
+  height: 10vh;
   /* 其他样式 */
 }
 .logo {
@@ -54,7 +54,7 @@ export default {
 }
 nav a {
   color: #637fc4;
-  margin-left: 20px;
+  margin-right: 20px;
   text-decoration: none;
   font-weight: bold;
   font-family: 'Open Sans';

@@ -27,7 +27,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 80px;
+  margin-top: 10vh;
 }
 section {
   scroll-margin-top: 80px; /* 这里的值与 header 的高度相同 */

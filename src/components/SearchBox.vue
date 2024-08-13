@@ -4,25 +4,24 @@
     <form @submit.prevent="validateAndSearch">
       <div class="input-group">
         <label for="taxon">Taxon</label>
-        <input type="text" id="taxon" v-model="searchFields.t" />
+        <el-input type="text" id="taxon" v-model="searchFields.t" clearable/>
       </div>
-
       <div class="input-group">
         <label for="location">Location</label>
         <div class="location-wrapper">
-          <input type="text" id="location" v-model="searchFields.l" @focus="showLocationTooltip = true"  @click="handleInputClick"  />
+          <el-input type="text" id="location" v-model="searchFields.l" @focus="showLocationTooltip = true"  @click="handleInputClick"  clearable/>
           <div class="tooltip" v-if="showLocationTooltip">
             <label for="continent">Continent/Ocean:</label>
-            <input style=" width: 80%;" type="text" class="location-field" id="continent" v-model="locationFields.continent" />
+            <el-input style=" width: 80%;" type="text" class="location-field" id="continent" v-model="locationFields.continent" clearable/>
 
             <label for="country">Country:</label>
-            <input style=" width: 80%;" type="text" class="location-field" id="country" v-model="locationFields.country" />
+            <el-input style=" width: 80%;" type="text" class="location-field" id="country" v-model="locationFields.country" clearable/>
 
             <label for="stateProvince">State/Province:</label>
-            <input style=" width: 80%;" type="text"  class="location-field" id="stateProvince" v-model="locationFields.stateProvince" />
+            <el-input style=" width: 80%;" type="text"  class="location-field" id="stateProvince" v-model="locationFields.stateProvince" clearable/>
 
             <label for="county">County:</label>
-            <input style=" width: 80%;" type="text" class="location-field" id="county" v-model="locationFields.county" />
+            <el-input style=" width: 80%;" type="text" class="location-field" id="county" v-model="locationFields.county" clearable/>
             <el-row style="font-size:1rem;color:#3e6398;">For a finer-grained location search, fill in any or all of the above fields.</el-row>
 
             <button type="button" @click="applyLocation">Apply</button>
@@ -33,7 +32,7 @@
       <div class="input-group">
         <label for="code">Institution Code / Catalog Number</label>
         <div class="select-wrapper">
-          <input type="text" id="code" v-model="searchFields.c" />
+          <el-input type="text" id="code" v-model="searchFields.c" clearable/>
           <button type="button" @click="toggleDropdown">▼</button>
           <div class="dropdown" v-if="showDropdown">
             <table>
@@ -57,17 +56,17 @@
 
       <div class="input-group">
         <label for="dateRange">Date Range (yyyy-yyyy)</label>
-        <input type="text" id="dateRange" v-model="searchFields.d" />
+        <el-input type="text" id="dateRange" v-model="searchFields.d" clearable/>
       </div>
 
       <div class="input-group">
         <label for="other">Other</label>
-        <input type="text" id="other" v-model="searchFields.q" />
+        <el-input type="text" id="other" v-model="searchFields.q" clearable/>
       </div>
 
       <div class="input-group">
         <label for="polygon">Search Polygon</label>
-        <input type="text" id="polygon" v-model="searchFields.p" placeholder="Paste WKT or select from menu" />
+        <el-input type="text" id="polygon" v-model="searchFields.p" placeholder="Paste WKT or Draw a Polygon (Click '&#11202;')" clearable/>
       </div>
       <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
 
@@ -151,10 +150,10 @@ export default {
       const fields = locationFields.value;
       const parts = [];
 
-      if (fields.continent) parts.push(`ContinentOcean: ${fields.continent}`);
-      if (fields.country) parts.push(`Country: ${fields.country}`);
-      if (fields.stateProvince) parts.push(`StateProvince: ${fields.stateProvince}`);
-      if (fields.county) parts.push(`County: ${fields.county}`);
+      if (fields.continent) parts.push(`ContinentOcean:${fields.continent}`);
+      if (fields.country) parts.push(`Country:${fields.country}`);
+      if (fields.stateProvince) parts.push(`StateProvince:${fields.stateProvince}`);
+      if (fields.county) parts.push(`County:${fields.county}`);
 
       searchFields.value.l = parts.join('; ');
       showLocationTooltip.value = false;

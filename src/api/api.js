@@ -10,20 +10,34 @@ const apiClient = axios.create({
     }
 });
 
+const errorCodes = ['Invalid APIKey', 'Polygon is not validly formatted WKT', 'A database error occurred.']; // 示例错误代码
+
+const handleResponse = async (response) => {
+    if (typeof response.data === 'string' && errorCodes.includes(response.data)) {
+        throw new Error(response.data);
+    }
+    console.log(response)
+    return response;
+};
+
 export default {
-    getOccurrences(params) {
-        return apiClient.get('/occurrence/', { params });
+    async getOccurrences(params) {
+        const response =  await apiClient.get('/occurrence/', { params });
+        return handleResponse(response);
     },
 
-    getTaxas(params) {
-        return apiClient.get('/taxa/', { params });
+    async getTaxas(params) {
+        const response = await apiClient.get('/taxa/', { params });
+        return handleResponse(response);
     },
 
-    getLocaton(params) {
-        return apiClient.get('/locations/', { params });
+    async getLocaton(params) {
+        const response = await apiClient.get('/locations/', { params });
+        return handleResponse(response);
     },
 
-    getProviders(params) {
-        return apiClient.get('/providers/', { params });
+    async getProviders(params) {
+        const response = await apiClient.get('/providers/', { params });
+        return handleResponse(response);
     },
 };

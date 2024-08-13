@@ -171,7 +171,16 @@ export default {
 
           L.marker([item.Latitude, item.Longitude], { icon })
               .addTo(markersLayer)
-              .bindPopup(`<b>${item.ScientificName}</b><br>${item.Locality}`);
+              .bindPopup( `<div style="font-family: Arial, sans-serif; font-size: 14px; padding: 10px; max-width: 300px;">
+                <div style="font-weight: bold; font-size: 16px; margin-bottom: 8px;">${item.InstitutionCode} ${item.CatalogNumber}</div>
+                <div>
+                  <span style="font-weight: bold;">Species:</span> ${item.ScientificName}<br>
+                  <span style="font-weight: bold;">No. of Specimens:</span> ${item.IndividualCount}<br>
+                  <span style="font-weight: bold;">Locality:</span> ${item.Locality}<br>
+                  <span style="font-weight: bold;">Collector:</span> ${item.Collector}<br>
+                  <span style="font-weight: bold;">Date Collected:</span> ${item.MonthCollected}/${item.DayCollected}/${item.YearCollected}
+                </div>
+              </div>`);
         }
       });
       updateMapFocus(newItems)
