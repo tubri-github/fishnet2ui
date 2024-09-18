@@ -1,26 +1,26 @@
 <template>
-  <agreement-modal></agreement-modal>
-  <div class="search-box">
+  <agreement-modal @accept="handleAgreementAccept"></agreement-modal>
+  <div class="search-box" id="searchFields">
     <form @submit.prevent="validateAndSearch">
       <div class="input-group">
-        <label for="taxon">Taxon</label>
+        <label for="taxon">TAXON</label>
         <el-input type="text" id="taxon" v-model="searchFields.t" clearable/>
       </div>
-      <div class="input-group">
-        <label for="location">Location</label>
+      <div class="input-group" id="locationHelper">
+        <label for="location">LOCATION</label>
         <div class="location-wrapper">
           <el-input type="text" id="location" v-model="searchFields.l" @focus="showLocationTooltip = true"  @click="handleInputClick"  clearable/>
           <div class="tooltip" v-if="showLocationTooltip">
-            <label for="continent">Continent/Ocean:</label>
+            <label for="continent">CONTINENT/OCEAN:</label>
             <el-input style=" width: 80%;" type="text" class="location-field" id="continent" v-model="locationFields.continent" clearable/>
 
-            <label for="country">Country:</label>
+            <label for="country">COUNTRY:</label>
             <el-input style=" width: 80%;" type="text" class="location-field" id="country" v-model="locationFields.country" clearable/>
 
-            <label for="stateProvince">State/Province:</label>
+            <label for="stateProvince">STATE/PROVINCE:</label>
             <el-input style=" width: 80%;" type="text"  class="location-field" id="stateProvince" v-model="locationFields.stateProvince" clearable/>
 
-            <label for="county">County:</label>
+            <label for="county">COUNTY:</label>
             <el-input style=" width: 80%;" type="text" class="location-field" id="county" v-model="locationFields.county" clearable/>
             <el-row style="font-size:1rem;color:#3e6398;">For a finer-grained location search, fill in any or all of the above fields.</el-row>
 
@@ -29,8 +29,8 @@
         </div>
       </div>
 
-      <div class="input-group">
-        <label for="code">Institution Code / Catalog Number</label>
+      <div class="input-group" id="institutionCodeHelper">
+        <label for="code">INSTITUTION CODE/CATALOG NUMBER</label>
         <div class="select-wrapper">
           <el-input type="text" id="code" v-model="searchFields.c" clearable/>
           <button type="button" @click="toggleDropdown">▼</button>
@@ -55,23 +55,23 @@
 
 
       <div class="input-group">
-        <label for="dateRange">Date Range (yyyy-yyyy)</label>
+        <label for="dateRange">DATE RANGE (yyyy-yyyy)</label>
         <el-input type="text" id="dateRange" v-model="searchFields.d" clearable/>
       </div>
 
       <div class="input-group">
-        <label for="other">Other</label>
+        <label for="other">OTHER</label>
         <el-input type="text" id="other" v-model="searchFields.q" clearable/>
       </div>
 
-      <div class="input-group">
-        <label for="polygon">Search Polygon</label>
+      <div class="input-group" id="polygonSearch">
+        <label for="polygon">SEARCH POLYGON</label>
         <el-input type="text" id="polygon" v-model="searchFields.p" placeholder="Paste WKT or Draw a Polygon (Click '&#11202;')" clearable/>
       </div>
       <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
 
       <div class="actions">
-        <button type="submit">Search</button>
+        <button type="submit">SEARCH</button>
       </div>
     </form>
   </div>
@@ -84,7 +84,7 @@ import { institutionCodes } from '@/data/institutionCode';
 
 export default {
   name: 'SearchBox',
-  emits: ['search'],
+  emits: ['search','start-tour'],
   components:{
     AgreementModal
   },
@@ -118,6 +118,10 @@ export default {
       stateProvince: '',
       county: ''
     });
+
+    const handleAgreementAccept =() => {
+      emit('start-tour'); // 触发 start-tour 事件
+    }
 
     const showLocationTooltip = ref(false);
     const showDropdown = ref(false);
@@ -207,7 +211,8 @@ export default {
       selectCode,
       handleInputClick,
       errorMessage,
-      validateAndSearch
+      validateAndSearch,
+      handleAgreementAccept
     };
   }
 };
@@ -228,7 +233,7 @@ export default {
   width: 100%;
   max-width: 400px;
   font-weight: bold;
-  font-family: 'Open Sans';
+  font-family: 'Metropolis','Open Sans';
 }
 
 .input-group {

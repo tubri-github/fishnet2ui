@@ -2,20 +2,20 @@
   <header class="app-header">
     <img src="@/assets/fn2logo.png" alt="Logo" class="logo"/> <!-- 假设你有logo图片 -->
     <nav>
-      <router-link to="/">Search</router-link>
-      <router-link to="/joinus">Join FishNet</router-link>
-      <router-link to="/contact">Contact Us</router-link>
-      <router-link to="/services">Services</router-link>
+      <router-link to="/">SEARCH</router-link>
+      <router-link to="/joinus">JOIN FISHNET</router-link>
+      <router-link to="/contact">CONTACT US</router-link>
+      <router-link to="/services">SERVICES</router-link>
       <div @mouseover="showSubMenu = true" @mouseleave="showSubMenu = false" class="about-menu">
-        <a>About</a>
+        <a>ABOUT</a>
         <div v-if="showSubMenu" class="submenu">
-          <router-link to="/about">Fishnet 2</router-link>
-          <router-link to="/datapolicy">Data Policies</router-link>
-          <router-link to="/funding">Funding</router-link>
-          <a href="#">Partner Institutions</a>
+          <router-link to="/about">FISHNET 2</router-link>
+          <router-link to="/datapolicy">DATA POLICIES</router-link>
+          <router-link to="/funding">FUNDING</router-link>
+          <a href="#">PARTNER INSTITUTIONS</a>
         </div>
       </div>
-      <router-link to="/georef">Georeferencing</router-link>
+      <router-link to="/georef">GEOREFERENCING</router-link>
 
     </nav>
   </header>
@@ -53,11 +53,11 @@ export default {
   width: 100px; /* 根据实际logo大小调整 */
 }
 nav a {
-  color: #637fc4;
+  color: #4d566c;
   margin-right: 20px;
   text-decoration: none;
-  font-weight: bold;
-  font-family: 'Open Sans';
+  font-weight: normal;
+  font-family: 'Metropolis','Open Sans';
 }
 nav a.router-link-active {
   text-decoration: underline;

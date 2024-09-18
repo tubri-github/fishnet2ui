@@ -5,7 +5,7 @@
         <el-tab-pane label="Search Results" name="dataTable">
           <div v-if="showTable">
             <div class="download-options">
-              <span>Download:</span>
+              <span>Download as : </span>
               <select v-model="downloadType" placeholder="Select">
                 <option label="CSV" value="csv"></option>
                 <option label="TXT" value="txt"></option>
@@ -401,6 +401,9 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.el-tabs.el-tabs--top{
+  --el-tabs-header-height:30px !important;
+}
 .selected-list-container {
   position: absolute;
   bottom: 0;
@@ -435,7 +438,7 @@ export default defineComponent({
   justify-content: space-between;
   padding: 0.5rem 1rem;
   background-color: #f3f3f3;
-  align-items: center;
+  /*align-items: center;*/
   border-bottom: 1px solid #e1e1e8;
   font-size: 1rem;
   position: sticky;
@@ -443,6 +446,7 @@ export default defineComponent({
 }
 .selected-list-header {
   top: 0;
+
 }
 .selected-list-footer {
   bottom: 0;
@@ -450,7 +454,7 @@ export default defineComponent({
   z-index: 1;
 }
 .download-options {
-  display: inline-block; /* 使下拉菜单与标题同行显示 */
+  /* display: inline-block; /* 使下拉菜单与标题同行显示 */
   margin-left: 10px; /* 添加一点间距 */
   text-align: left;
 }
@@ -481,6 +485,7 @@ export default defineComponent({
   border-collapse: collapse;
   text-align: left;
   font-size: 0.75rem; /* 调小字体大小 */
+  font-family: monospace, sans-serif; /* 使用现代无衬线字体 */
   line-height: 1rem; /* 调小行高 */
   white-space: nowrap; /* 禁用换行 */
 }
@@ -489,11 +494,18 @@ export default defineComponent({
   position: sticky;
   top: 0;
   z-index: 2;
+  font-weight: bold;
 }
 .selected-list-table tbody {
   max-width: 100%;
   overflow-x: auto;
+  font-weight: normal;
 }
+
+.selected-list-table tbody tr:hover {
+  background-color: rgba(168, 220, 231, 0.8) !important; /* 行悬停效果 */
+}
+
 .selected-list-table th,
 .selected-list-table td {
   padding: 0.25rem; /* 调小填充 */

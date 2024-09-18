@@ -8,6 +8,9 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet-draw/dist/leaflet.draw.css';
 import 'leaflet-draw';
 import {onBeforeUnmount, onMounted, ref, watch} from "vue";
+import {driver} from "driver.js";
+import '@/assets/driver_theme.css';
+import 'driver.js/dist/driver.css';
 
 export default {
   name: 'LeafletMapComponent',
@@ -40,6 +43,74 @@ export default {
     let map;
     let markersLayer;
     let paginationControlInstance;
+
+    const startTour = () => {
+      const driverInstance  = driver({
+        popoverClass: 'blue-white-popover',
+        showProgress: false,
+        allowHTML: true,
+        allowClose: false,
+        steps: [
+
+          // Step 3: Viewing Results - 结果展示区域
+          {
+            element: '.selected-list-container',  // 结果展示区域
+            popover: {
+              title: 'Viewing Results',
+              description: 'Your search results will appear below the map area. Let\'s go over the result tabs.',
+              position: 'top'
+            }
+          },
+          {
+            element: '#tab-dataTable',  // Search Results 标签
+            popover: {
+              title: 'Search Results Tab',
+              description: 'This tab shows a listing of specimen records returned by your search.',
+              position: 'top'
+            }
+          },
+          {
+            element: '#tab-otherData',  // Taxon 标签
+            popover: {
+              title: 'Taxon Tab',
+              description: 'Taxon -summary listing the number of records found for each taxon in your result set. A link to the Encyclopedia of Life is also provided for each taxon, making it easy to get further information (general description, life history, photos etc.) about a particular species',
+              position: 'top'
+            }
+          },
+          {
+            element: '#tab-additionalInfo',  // Providers & Citation 标签
+            popover: {
+              title: 'Providers & Citation Tab',
+              description: 'Providers & Citation -summary listing the number of records found for each data provider in your result set along with a generated citation.',
+              position: 'top'
+            }
+          },
+          {
+            element: '#tab-extraInfo',  // Location 标签
+            popover: {
+              title: 'Location Tab',
+              description: 'This tab summarizes the number of records found for unique locations in your result set.',
+              position: 'top'
+            }
+          },
+          // Step 4: Downloading/Mapping Results - 下载和映射结果
+          {
+            element: '.download-options',  // 下载链接区域
+            popover: {
+              title: 'Downloading/Mapping Results',
+              description: 'You can download the full dataset for the selected tab (Search Results, Taxon, Providers or Location) in either comma separated value (CSV) or tab delimited text (TXT) format. If your query results contain mappable geographic coordinates, the Search Results tab will also contain a Keyhole Markup Language (KML) format in addition to the CSV and TXT links. KML files can be visualized in Google Earth as well as many newer GIS programs',
+              position: 'top'
+            }
+          }
+        ]
+      });
+
+
+      driverInstance.drive();
+      localStorage.setItem('hasSeenTableTour', true); // 标记用户已经看过引导
+    };
+
+
 
     const updateMapFocus = (items) => {
       const latLngs = items
@@ -101,6 +172,11 @@ export default {
     });
 
     const addPaginationControls = () => {
+      if (paginationControlInstance) {
+        updatePaginationInfo();
+        return;
+      }
+
       const paginationControl = L.Control.extend({
         options: {
           position: 'topright'  // 控件位置
@@ -109,7 +185,7 @@ export default {
           const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
           const paginationContainer = L.DomUtil.create('div', 'pagination-container', container);
 
-          const prevButton = L.DomUtil.create('a', 'leaflet-control-button', paginationContainer);
+          const prevButton = L.DomUtil.create('a', 'leaflet-control-button prev', paginationContainer);
           prevButton.innerHTML = '&laquo;';
           prevButton.href = '#';
           prevButton.title = 'Previous Page';
@@ -122,7 +198,7 @@ export default {
           pageInfo.id ='page-info'
           pageInfo.innerHTML = `Page ${props.currentPage} of ${props.totalPages}`;
 
-          const nextButton = L.DomUtil.create('a', 'leaflet-control-button', paginationContainer);
+          const nextButton = L.DomUtil.create('a', 'leaflet-control-button next', paginationContainer);
           nextButton.innerHTML = '&raquo;';
           nextButton.href = '#';
           nextButton.title = 'Next Page';
@@ -135,28 +211,43 @@ export default {
         }
       });
 
-      map.addControl(new paginationControl());
+      paginationControlInstance = new paginationControl();
+      map.addControl(paginationControlInstance);
       updatePaginationInfo();
     };
 
-    watch([() => props.currentPage, () => props.totalPages, () => props.resultsPlotted], () => {
-        updatePaginationInfo();
-    });
     const updatePaginationInfo = () => {
       const pageInfo = document.getElementById('page-info');
+      const prevButton = document.querySelector('.leaflet-control-button.prev');
+      const nextButton = document.querySelector('.leaflet-control-button.next');
+
       if (pageInfo) {
-        pageInfo.innerHTML = `Page ${props.currentPage} of ${props.totalPages}`;
+        if (props.totalPages === 0) {
+          pageInfo.innerHTML = 'No match found for this query :(';
+          // 隐藏分页按钮
+          if (prevButton) prevButton.style.display = 'none';
+          if (nextButton) nextButton.style.display = 'none';
+        } else {
+          pageInfo.innerHTML = `Page ${props.currentPage} of ${props.totalPages}`;
+          // 显示分页按钮
+          if (prevButton) prevButton.style.display = 'block';
+          if (nextButton) nextButton.style.display = 'block';
+        }
+      }
+
+      if (!localStorage.getItem('hasSeenTableTour')) {
+        startTour();
       }
     };
 
-    watch(() => props.showPaginationButtons, (show) => {
-      if (show) {
+    watch([() => props.showPaginationButtons,() => props.currentPage, () => props.totalPages, () => props.resultsPlotted], () => {
+      if (!paginationControlInstance) {
+        // 确保控件在第一次搜索后初始化，无论是否有结果
         addPaginationControls();
-      } else if (paginationControlInstance) {
-        map.removeControl(paginationControlInstance);
-        paginationControlInstance = null;
       }
-    });
+        updatePaginationInfo();
+
+    }, { flush: 'post' });
 
     watch(() => props.selectedItems, (newItems) => {
       markersLayer.clearLayers();
@@ -242,12 +333,16 @@ export default {
   background-color: #f0f0f0;
 }
 
+.leaflet-control-button[style*="display: none"] {
+  display: none; /* 确保按钮在隐藏时不占用空间 */
+}
+
 .custom-icon {
   color: red;
   font-size: 24px;
   position: absolute;
-  top: -24px;
-  left: -12px;
+  /*top: -24px;
+  left: -12px;*/ /*this will lead to markers offset on the map while zoom in/out*/
 }
 .leaflet-right{
   left: 50%;
@@ -267,15 +362,15 @@ export default {
   transform: translateX(-50%);
 }
 
-
-.leaflet-control-button:hover {
-  background-color: #f0f0f0;
-}
-
 .page-info {
   margin: 0 10px;
   font-size: 14px;
   white-space: nowrap;
+}
+
+.page-info.no-results {
+  font-style: italic;
+  color: red;
 }
 
 </style>

@@ -7,6 +7,8 @@ import 'element-plus/dist/index.css'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faWindowRestore,faExpandArrowsAlt,faTimes,faMapPin } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import '@fontsource/metropolis';
+
 
 library.add(faWindowRestore, faExpandArrowsAlt,faTimes,faMapPin)
 

@@ -2,12 +2,12 @@
   <div class="map-view">
     <div class="search-area">
 <!--      <search-box @search="toggleSelectedList"/>-->
-      <search-box @search="fetchOccurrences" :polygon="polygon"/>
+      <search-box  @start-tour="startTour" @search="fetchOccurrences" :polygon="polygon"/>
     </div>
-    <div class="map-area" :class="{ 'loading': isLoading }">
+    <div class="map-area" :class="{ 'loading': isLoading }" >
       <leaflet-map-component @polygonDrawn="handlePolygonDrawn"
                              :selectedItems="items"
-                             :showPaginationButtons="items.length > 0"
+                             :showPaginationButtons="pagination.showedPageInfo"
                              :currentPage="pagination.currentPage"
                              :totalPages="pagination.totalPages"
                              :resultsPlotted="items.length"
@@ -36,6 +36,10 @@
 import {computed, ref} from 'vue';
 import api from '@/api/api';
 import debounce from 'lodash/debounce';
+import {driver} from 'driver.js';
+import '@/assets/driver_theme.css';
+import 'driver.js/dist/driver.css';
+
 
 import SearchBox from "@/components/SearchBox";
 import LeafletMapComponent from "@/components/LeafletMapComponent";
@@ -68,8 +72,90 @@ export default {
       currentPage: 1,
       pageSize: 10,
       totalItems: 0,
-      totalPages: computed(() => Math.ceil(pagination.value.totalItems / pagination.value.pageSize))
+      totalPages: computed(() => Math.ceil(pagination.value.totalItems / pagination.value.pageSize)),
+      showedPageInfo: false
     });
+
+    const startTour = () => {
+      const driverInstance  = driver({
+        popoverClass: 'blue-white-popover',
+        showProgress: false,
+        allowHTML: true,
+        allowClose: false,
+        steps: [
+          {
+            popover: {
+              title: 'Hello, FishNet2 community!\n',
+              description:
+                  '<p>We\'re excited to announce a fresh new look for FishNet! We\'ve given our interface a makeover to enhance your experience while keeping all the features and APIs you used to have. We are currently working on more exciting updates coming next!</p>' +
+                  '<p style="font-size:20px">Having issues? Contact us at <a href="mailto:xwang48@tulane.edu">xwang48@tulane.edu</a> or visit our <a href="https://github.com/tubri/Fishnet2Community/discussions"> GitHub community</a></p>',
+              position: 'center',
+            }
+          },
+          {
+            element: '#searchFields',  // 假设这是搜索表单的ID
+            popover: {
+              title: 'Conducting a Search',
+              description: 'Enter your search terms into the provided fields and click execute to conduct a search.',
+              position: 'left',
+              align:'start'
+            }
+          },
+          {
+            element: '#searchFields',  // 假设这是显示 ">>" 链接的元素
+            popover: {
+              title: 'Search Field Helper',
+              description: 'Some fields may contain a ">>" link, which opens a search helper to guide your search.',
+              position: 'left',
+              align: 'center'
+            }
+          },
+          {
+            element: '#locationHelper',  // 位置搜索帮助
+            popover: {
+              title: 'Location Search Helper',
+              description: 'The location search helper allows you to specify more precise location details.',
+              position: 'left'
+            }
+          },
+          {
+            element: '#institutionCodeHelper',  // 机构代码搜索帮助
+            popover: {
+              title: 'Institution Code Search Helper',
+              description: 'This helper displays a list of available institution codes for a more specific query.',
+              position: 'left'
+            }
+          },
+          {
+            element: '#polygonSearch',  // 假设这是多边形搜索的链接
+            popover: {
+              title: 'Polygon Search Helper',
+              description: 'Paste WKT or Draw a Polygon (Click \'&#11202;\') to draw polygons on the map as search criteria.',
+              position: 'left'
+            }
+          },
+          {
+            element: '.leaflet-draw.leaflet-control',  // 假设这是多边形搜索的链接,map
+            popover: {
+              title: 'Polygon Search Helper',
+              description: 'Paste WKT or Draw a Polygon (Click \'&#11202;\') to draw polygons on the map as search criteria.',
+              position: 'right'
+            }
+          }
+        ]
+      });
+
+
+      driverInstance.drive();
+      localStorage.setItem('hasSeenTour', true); // 标记用户已经看过引导
+    };
+
+    // onMounted(() => {
+    //   // 页面加载时检查用户是否已经看过引导
+    //   if (!localStorage.getItem('hasSeenTour')) {
+    //     startTour();
+    //   }
+    // });
 
 
     const showSelectedList = ref(false);
@@ -103,6 +189,7 @@ export default {
         extraInfo.value = extraInfoResponse.data.locations;
         paginationData.value.extraInfoTotal = extraInfoResponse.data.total;
         showSelectedList.value = true;
+        pagination.value.showedPageInfo = true;
       } catch (error) {
         // console.error('Error fetching data:', error);
         alert(error.message);
@@ -418,7 +505,8 @@ export default {
       paginationData,
       changePage,
       selectedListRef,
-      pagination
+      pagination,
+      startTour
     };
   },
 }
@@ -455,5 +543,68 @@ export default {
 .slide-up-enter, .slide-up-leave-to {
   transform: translateY(100%);
 }
+
+
+.driver-popover.driverjs-theme {
+  background-color: #fde047;
+  color: #000;
+}
+
+.driver-popover.driverjs-theme .driver-popover-title {
+  font-size: 20px;
+}
+
+.driver-popover.driverjs-theme .driver-popover-title,
+.driver-popover.driverjs-theme .driver-popover-description,
+.driver-popover.driverjs-theme .driver-popover-progress-text {
+  color: #000;
+}
+
+.driver-popover.driverjs-theme button {
+  flex: 1;
+  text-align: center;
+  background-color: #000;
+  color: #ffffff;
+  border: 2px solid #000;
+  text-shadow: none;
+  font-size: 14px;
+  padding: 5px 8px;
+  border-radius: 6px;
+}
+
+.driver-popover.driverjs-theme button:hover {
+  background-color: #000;
+  color: #ffffff;
+}
+
+.driver-popover.driverjs-theme .driver-popover-navigation-btns {
+  justify-content: space-between;
+  gap: 3px;
+}
+
+.driver-popover.driverjs-theme .driver-popover-close-btn {
+  color: #9b9b9b;
+}
+
+.driver-popover.driverjs-theme .driver-popover-close-btn:hover {
+  color: #000;
+}
+
+.driver-popover.driverjs-theme .driver-popover-arrow-side-left.driver-popover-arrow {
+  border-left-color: #fde047;
+}
+
+.driver-popover.driverjs-theme .driver-popover-arrow-side-right.driver-popover-arrow {
+  border-right-color: #fde047;
+}
+
+.driver-popover.driverjs-theme .driver-popover-arrow-side-top.driver-popover-arrow {
+  border-top-color: #fde047;
+}
+
+.driver-popover.driverjs-theme .driver-popover-arrow-side-bottom.driver-popover-arrow {
+  border-bottom-color: #fde047;
+}
+
 
 </style>

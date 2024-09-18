@@ -31,13 +31,17 @@ import { useRouter } from 'vue-router';
 
 export default {
   name: 'AgreementModal',
-  setup() {
+  emits:['accept'],
+  props: {
+  },
+  setup(props,{ emit }) {
     const showModal = ref(true);
     const router = useRouter();
 
 
     const acceptTerms = () => {
       localStorage.setItem('fishnet2-data-use-accepted', Date.now().toString());
+      emit('accept');
       showModal.value = false;
     };
 
