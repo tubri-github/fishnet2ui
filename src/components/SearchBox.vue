@@ -84,6 +84,9 @@
         <a href="https://github.com/tubri/Fishnet2Community/discussions" target="_blank" aria-label="GitHub">
           <i class="fab fa-github"></i>
         </a>
+        <a href="mailto:fishnet2@tulane.edu" target="_blank" aria-label="Email">
+          <i class="fab fa-envelope">fishnet2@tulane.edu</i>
+        </a>
       </p>
       <p>Development funding provided by:<br>
         <a href="http://www.nsf.gov/">National Science Foundation</a> | <a href="http://www.nbii.gov/">National Biological Information Infrastructure</a><br>
