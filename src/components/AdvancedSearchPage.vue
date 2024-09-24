@@ -30,7 +30,7 @@ export default {
 
     function search() {
       // 模拟搜索逻辑
-      console.log('Advanced searching with filters:', filters.value);
+      // console.log('Advanced searching with filters:', filters.value);
       // 假数据替代
       results.value = [
         { id: 1, title: 'Title 1', author: 'Author 1' },

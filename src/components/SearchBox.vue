@@ -1,7 +1,7 @@
 <template>
   <agreement-modal @accept="handleAgreementAccept"></agreement-modal>
   <div class="search-box" id="searchFields">
-    <form @submit.prevent="validateAndSearch">
+    <form class="search-box-content" @submit.prevent="validateAndSearch">
       <div class="input-group">
         <label for="taxon">TAXON</label>
         <el-input type="text" id="taxon" v-model="searchFields.t" clearable/>
@@ -74,7 +74,23 @@
         <button type="submit">SEARCH</button>
       </div>
     </form>
+    <footer class="searchbox-footer">
+      <p>Looking for help? <a @click="restartTour">Click here.</a></p>
+      <p>
+        Join us on
+        <a href="https://www.facebook.com/FishNet2/info/" target="_blank" aria-label="Facebook">
+          <i class="fab fa-facebook"></i>
+        </a>
+        <a href="https://github.com/tubri/Fishnet2Community/discussions" target="_blank" aria-label="GitHub">
+          <i class="fab fa-github"></i>
+        </a>
+      </p>
+      <p>Development funding provided by:<br>
+        <a href="http://www.nsf.gov/">National Science Foundation</a> | <a href="http://www.nbii.gov/">National Biological Information Infrastructure</a><br>
+          © 2017 FishNet 2 - All Rights Reserved</p>
+    </footer>
   </div>
+
 </template>
 
 <script>
@@ -122,6 +138,9 @@ export default {
     const handleAgreementAccept =() => {
       emit('start-tour'); // 触发 start-tour 事件
     }
+    const restartTour = () => {
+      emit('start-tour'); // 重新开始 driver.js 引导
+    };
 
     const showLocationTooltip = ref(false);
     const showDropdown = ref(false);
@@ -173,7 +192,7 @@ export default {
 
     function validateAndSearch() {
       // 验证至少一个输入框有值
-      console.log("d")
+      // console.log("d")
       if (
           !searchFields.value.t &&
           !searchFields.value.l &&
@@ -212,12 +231,41 @@ export default {
       handleInputClick,
       errorMessage,
       validateAndSearch,
-      handleAgreementAccept
+      handleAgreementAccept,
+      restartTour
     };
   }
 };
 </script>
 <style scoped>
+.search-box-content{
+  flex: 1;
+}
+.searchbox-footer {
+
+  text-align: center;
+  font-size: 10px;
+}
+
+.searchbox-footer a {
+  color: #333;
+  text-decoration: none;
+}
+
+.searchbox-footer a:hover {
+  text-decoration: underline;
+}
+
+.searchbox-footer i {
+  font-size: 20px;
+  margin: 0 10px;
+  color: #3b5998; /* Facebook 蓝色 */
+}
+
+
+.searchbox-footer p {
+  margin: 5px 0;
+}
 .search-box {
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 8px;
@@ -233,13 +281,18 @@ export default {
   width: 100%;
   max-width: 400px;
   font-weight: bold;
-  font-family: 'Metropolis','Open Sans';
+
+  height: 100%; /* 确保容器占满父级 */
+  position: relative;
+  justify-content: space-between;
+
 }
 
 .input-group {
   display: block;
   margin-bottom: 10px;
   padding: 0 10px 0 10px;
+  font-family: 'Noto Sans', 'Noto Sans Symbols', 'Arial', 'Segoe UI', sans-serif;
 }
 
 .input-group label {
@@ -248,6 +301,7 @@ export default {
   color: #333;
   font-size: 0.875rem;
   text-align: left;
+  font-family: 'Metropolis','Open Sans';
 }
 
 .select-wrapper {

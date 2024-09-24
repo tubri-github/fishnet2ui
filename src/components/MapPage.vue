@@ -400,7 +400,7 @@ export default {
         if (window.WritableStream && readableStream.pipeTo) {
           // 更现代的浏览器
           await readableStream.pipeTo(fileStream);
-          console.log('Download complete');
+          // console.log('Download complete');
         } else {
           // 旧版浏览器
           const writer = fileStream.getWriter();
@@ -445,10 +445,10 @@ export default {
     //     // 提取文件名
     //     const contentDisposition = response.headers['content-disposition'];
     //     let fileName = 'data.csv'; // 默认文件名
-    //     console.log(contentDisposition)
+    //     // console.log(contentDisposition)
     //     if (contentDisposition && contentDisposition.indexOf('attachment') !== -1) {
     //       const match = contentDisposition.match(/filename="(.+)"/);
-    //       console.log(match)
+    //       // console.log(match)
     //       if (match && match[1]) {
     //         fileName = match[1];
     //       }
@@ -468,7 +468,7 @@ export default {
 
     function search() {
       // fake search logic
-      console.log('Searching for:', searchTerm.value);
+      // console.log('Searching for:', searchTerm.value);
       // fake data
       results.value = [
         { identifier: 1, name: 'Result 1' },
@@ -526,6 +526,7 @@ export default {
   flex: 1; /* 占据1/3的宽度 */
   border-right: 1px solid #ccc; /* 与地图组件分隔开 */
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
 }
 
 .map-area {

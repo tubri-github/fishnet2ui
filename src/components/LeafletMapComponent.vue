@@ -66,7 +66,8 @@ export default {
             popover: {
               title: 'Search Results Tab',
               description: 'This tab shows a listing of specimen records returned by your search.',
-              position: 'top'
+              position: 'top',
+              align:'start'
             }
           },
           {
@@ -74,7 +75,8 @@ export default {
             popover: {
               title: 'Taxon Tab',
               description: 'Taxon -summary listing the number of records found for each taxon in your result set. A link to the Encyclopedia of Life is also provided for each taxon, making it easy to get further information (general description, life history, photos etc.) about a particular species',
-              position: 'top'
+              position: 'top',
+              align:'start'
             }
           },
           {
@@ -82,7 +84,8 @@ export default {
             popover: {
               title: 'Providers & Citation Tab',
               description: 'Providers & Citation -summary listing the number of records found for each data provider in your result set along with a generated citation.',
-              position: 'top'
+              position: 'top',
+              align:'start'
             }
           },
           {
@@ -90,7 +93,8 @@ export default {
             popover: {
               title: 'Location Tab',
               description: 'This tab summarizes the number of records found for unique locations in your result set.',
-              position: 'top'
+              position: 'top',
+              align:'start'
             }
           },
           // Step 4: Downloading/Mapping Results - 下载和映射结果
@@ -99,7 +103,8 @@ export default {
             popover: {
               title: 'Downloading/Mapping Results',
               description: 'You can download the full dataset for the selected tab (Search Results, Taxon, Providers or Location) in either comma separated value (CSV) or tab delimited text (TXT) format. If your query results contain mappable geographic coordinates, the Search Results tab will also contain a Keyhole Markup Language (KML) format in addition to the CSV and TXT links. KML files can be visualized in Google Earth as well as many newer GIS programs',
-              position: 'top'
+              position: 'top',
+              align:'start'
             }
           }
         ]
@@ -159,8 +164,8 @@ export default {
         drawnItems.addLayer(layer);
 
         const polygon = layer.toGeoJSON();
-        const polygonString = JSON.stringify(polygon.geometry.coordinates);
-        console.log(polygonString);
+        //const polygonString = JSON.stringify(polygon.geometry.coordinates);
+        // console.log(polygonString);
         const coordinates = polygon.geometry.coordinates[0].map(coord => `${coord[0]} ${coord[1]}`).join(',');
         const wktPolygon = `POLYGON((${coordinates}))`;
         emit('polygonDrawn', wktPolygon);

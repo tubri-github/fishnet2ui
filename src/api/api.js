@@ -16,7 +16,7 @@ const handleResponse = async (response) => {
     if (typeof response.data === 'string' && errorCodes.includes(response.data)) {
         throw new Error(response.data);
     }
-    console.log(response)
+    // console.log(response)
     return response;
 };
 
