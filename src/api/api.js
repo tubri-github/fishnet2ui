@@ -9,6 +9,22 @@ const apiClient = axios.create({
         'Content-Type': 'application/json'
     }
 });
+async function getJwtToken() {
+    try {
+        const response = await axios.get(process.env.VUE_APP_API_BASE_URL + '/clients');
+        return response.data.token; // 假设返回的是 { token: 'jwt-token-value' }
+    } catch (error) {
+        console.error('Error fetching JWT:', error);
+        return null;
+    }
+}
+apiClient.interceptors.request.use(async (config) => {
+    const token = await getJwtToken();
+    if (token) {
+        config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    return config;
+});
 
 const errorCodes = ['Invalid APIKey', 'Polygon is not validly formatted WKT', 'A database error occurred.']; // 示例错误代码
 

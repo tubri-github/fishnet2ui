@@ -126,7 +126,7 @@ export default {
       d: '',
       q: '',
       p: props.polygon,
-      api:'nelson',
+      //api:'nelson',
       fmt:'json',
       num:'20',
     });
