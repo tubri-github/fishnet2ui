@@ -84,8 +84,8 @@
         <a href="https://github.com/tubri/Fishnet2Community/discussions" target="_blank" aria-label="GitHub">
           <i class="fab fa-github"></i>
         </a>
-        <a href="mailto:fishnet2@tulane.edu" target="_blank" aria-label="Email">
-          <i class="fab fa-envelope">fishnet2@tulane.edu</i>
+        <a href="mailto:fishnet2@tulane.edu" target="_blank" aria-hidden="true">
+          <i class="fa fa-envelope"></i>
         </a>
       </p>
       <p>Development funding provided by:<br>
@@ -260,7 +260,7 @@ export default {
 }
 
 .searchbox-footer i {
-  font-size: 20px;
+  font-size: 15px;
   margin: 0 10px;
   color: #3b5998; /* Facebook 蓝色 */
 }

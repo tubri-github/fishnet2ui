@@ -246,7 +246,6 @@ export default defineComponent({
   },
   emits: ['close', 'fetchPageData','download'],
   setup(props, { emit }) {
-    const fullHeight = ref(false);
     const selectedListContainer = ref(null);
     const pagination = ref({
       dataTable: { currentPage: 1, pageSize: 20, totalItems: props.paginationData.dataTableTotal || 0 },
@@ -255,6 +254,8 @@ export default defineComponent({
       additionalInfo: { currentPage: 1, pageSize: 20, totalItems: props.paginationData.additionalInfoTotal || 0 },
       extraInfo: { currentPage: 1, pageSize: 20, totalItems: props.paginationData.extraInfoTotal || 0 }
     });
+    const fullHeight = ref(false); // FullScreen?
+    // const isPartialView = ref(false); // PartialView?
     const activeTab = ref('dataTable');
     const showTable = ref(true);
     const downloadType = ref('csv');
@@ -293,12 +294,42 @@ export default defineComponent({
     });
 
     const togglePartialView = () => {
-      fullHeight.value = false;
+      if (!showTable.value) {
+        // 如果表格当前是关闭状态，打开为半屏
+        showTable.value = true;
+        fullHeight.value = false;
+      } else if (showTable.value && !fullHeight.value) {
+        // 如果当前是半屏状态，再次点击无效
+        return;
+      } else {
+        // 如果当前是全屏状态，切换到半屏
+        fullHeight.value = false;
+      }
     };
 
     const toggleFullView = () => {
-      fullHeight.value = !fullHeight.value;
-      showTable.value = true;
+      if (!showTable.value) {
+        // 如果表格当前是关闭状态，打开为全屏
+        showTable.value = true;
+        fullHeight.value = true;
+      } else if (showTable.value && fullHeight.value) {
+        // 如果当前是全屏状态，再次点击无效
+        return;
+      } else {
+        // 如果当前是半屏状态，切换到全屏
+        fullHeight.value = true;
+      }
+    };
+
+    const toggleTable = () => {
+      if (!showTable.value) {
+        // 表格已经是关闭状态，再次点击无效
+        return;
+      } else {
+        // 关闭表格并重置视图状态
+        showTable.value = false;
+        fullHeight.value = false;
+      }
     };
 
     const handleTabClick = (tab) => {
@@ -327,9 +358,7 @@ export default defineComponent({
       emit('fetchPageData', { page: pagination.value[activeTab.value].currentPage, size: pagination.value[activeTab.value].pageSize, tab: activeTab.value })
 
     };
-    const toggleTable = () => {
-      showTable.value = !showTable.value;
-    };
+
 
     const handleDownload = () => {
       emit('download', { type: downloadType.value, tab: activeTab.value });
@@ -405,6 +434,8 @@ export default defineComponent({
   --el-tabs-header-height:30px !important;
 }
 .selected-list-container {
+  display: flex;
+  flex-direction: column;
   position: absolute;
   bottom: 0;
   left: 0;
@@ -428,7 +459,18 @@ export default defineComponent({
   max-height: 100vh;
   transform: none; /* 不需要移动 */
 }
-
+.selected-list-content {
+  overflow-y: auto;
+  overflow-x: auto;
+  max-height: calc(60vh - 150px); /* 半屏时的最大高度，考虑到表头和分页部分的高度 */
+  min-height: calc(60vh - 150px); /* 设置半屏时的最小高度 */
+  position: relative;
+  background-color: #d7e4ea; /* 背景色，用于填充空白 */
+}
+.selected-list-content.full-height {
+  /* max-height: calc(100vh - 150px); /* 全屏时的最大高度 */
+  min-height: calc(100vh - 210px); /* 设置全屏时的最小高度 */
+}
 .selected-list-content.minimized {
   max-height: calc(20vh - 120px); /* 最小化时的高度 */
 }
