@@ -4,7 +4,7 @@
 <!--      <search-box @search="toggleSelectedList"/>-->
       <search-box  @start-tour="startTour" @search="fetchOccurrences" :polygon="polygon"/>
     </div>
-    <div class="map-area" :class="{ 'loading': isLoading }" >
+    <div class="map-area" >
       <leaflet-map-component @polygonDrawn="handlePolygonDrawn"
                              :selectedItems="items"
                              :showPaginationButtons="pagination.showedPageInfo"
@@ -34,6 +34,7 @@
 
 <script>
 import {computed, ref} from 'vue';
+import { ElLoading } from 'element-plus';
 import api from '@/api/api';
 import debounce from 'lodash/debounce';
 import {driver} from 'driver.js';
@@ -75,6 +76,12 @@ export default {
       totalPages: computed(() => Math.ceil(pagination.value.totalItems / pagination.value.pageSize)),
       showedPageInfo: false
     });
+    // const loadingState = reactive({
+    //   occurrences: 'Loading...',
+    //   taxas: 'Loading...',
+    //   providers: 'Loading...',
+    //   locations: 'Loading...',
+    // });
 
     const startTour = () => {
       const driverInstance  = driver({
@@ -160,41 +167,76 @@ export default {
 
     const showSelectedList = ref(false);
     const polygon = ref('');
-    const isLoading = ref(false);
+    let loadingInstance = null;
     const selectedListRef = ref(null);
 
     const debouncedFetchOccurrences = debounce(async (params) => {
       try {
-        isLoading.value = true;
+        loadingInstance = ElLoading.service({
+          lock: true,
+          text: 'Loading...',
+          background: 'rgba(255, 255, 255, 0.7)',
+        });
+
         const filteredParams = Object.fromEntries(
             Object.entries(params).filter(([, value]) => value != null && value !== '')
         );
         fparams = filteredParams
-        const [occurrencesResponse, otherDataResponse, additionalInfoResponse, extraInfoResponse] = await Promise.all([
-        // const [occurrencesResponse] = await Promise.all([
-          api.getOccurrences(filteredParams),
-          api.getTaxas(filteredParams),
-          api.getProviders(filteredParams),
+        // 并行请求多个 API
+        await Promise.all([
+          api.getOccurrences(filteredParams)
+              .then((response) => {
+                items.value = response.data.occurrences;
+                paginationData.value.dataTableTotal = response.data.total;
+                pagination.value.totalItems = response.data.total;
+                pagination.value.pageSize = 20;
+                loadingInstance.setText('Occurrences Data Loaded Successfully'); // 更新状态
+              })
+              .catch(() => {
+                items.value = []; // 清空数据
+                loadingInstance.setText('Failed to Load Occurrence Data'); // 显示加载失败
+              }),
+          api.getTaxas(filteredParams)
+              .then((response) => {
+                otherData.value = response.data.taxas;
+                paginationData.value.otherDataTotal = response.data.total;
+                loadingInstance.setText('Taxa Data Loaded Successfully'); // 更新状态
+              })
+              .catch(() => {
+                otherData.value = []; // 清空数据
+                loadingInstance.setText('Failed to Load Taxa Data'); // 显示加载失败
+              }),
+          api.getProviders(filteredParams)
+              .then((response) => {
+                additionalInfo.value = response.data.providers;
+                paginationData.value.additionalInfoTotal = response.data.total;
+                loadingInstance.setText('Provider and Citation Data Loaded Successfully'); // 更新状态
+              })
+              .catch(() => {
+                additionalInfo.value = []; // 清空数据
+                loadingInstance.setText('Failed to Load Provider and Citation Data'); // 显示加载失败
+              }),
           api.getLocaton(filteredParams)
+              .then((response) => {
+                extraInfo.value = response.data.locations;
+                paginationData.value.extraInfoTotal = response.data.total;
+                loadingInstance.setText('Location Data Loaded Successfully'); // 更新状态
+              })
+              .catch(() => {
+                extraInfo.value = []; // 清空数据
+                loadingInstance.setText('Failed to Load Location Data '); // 显示加载失败
+              }),
         ]);
 
-        items.value = occurrencesResponse.data.occurrences;
-        paginationData.value.dataTableTotal = occurrencesResponse.data.total;
-        pagination.value.totalItems = occurrencesResponse.data.total;
-        pagination.value.pageSize = 20;
-        otherData.value = otherDataResponse.data.taxas;
-        paginationData.value.otherDataTotal = otherDataResponse.data.total;
-        additionalInfo.value = additionalInfoResponse.data.providers;
-        paginationData.value.additionalInfoTotal = additionalInfoResponse.data.total;
-        extraInfo.value = extraInfoResponse.data.locations;
-        paginationData.value.extraInfoTotal = extraInfoResponse.data.total;
         showSelectedList.value = true;
         pagination.value.showedPageInfo = true;
       } catch (error) {
         // console.error('Error fetching data:', error);
         alert(error.message);
       } finally {
-        isLoading.value = false;
+        if (loadingInstance) {
+          loadingInstance.close();
+        }
       }
     }, 500);
 
@@ -213,7 +255,11 @@ export default {
 
     async function fetchPageData({ page, size, tab }) {
       try {
-        isLoading.value = true;
+        loadingInstance = ElLoading.service({
+          lock: true,
+          text: 'Loading Page Data...',
+          background: 'rgba(255, 255, 255, 0.7)',
+        });
         let response;
         switch (tab) {
           case 'dataTable':
@@ -243,7 +289,9 @@ export default {
       } catch (error) {
         alert(error.message);
       } finally {
-        isLoading.value = false;
+        if (loadingInstance) {
+          loadingInstance.close();
+        }
       }
     }
     // const downloadFile = async ({ type, tab}) => {
@@ -500,7 +548,6 @@ export default {
       fetchOccurrences,
       handleDownload,
       polygon,
-      isLoading,
       fetchPageData,
       paginationData,
       changePage,
