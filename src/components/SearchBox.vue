@@ -55,7 +55,7 @@
 
 
       <div class="input-group">
-        <label for="dateRange">DATE RANGE (yyyy-yyyy)</label>
+        <label for="dateRange">DATE RANGE (yyyy-yyyy or yyyy)</label>
         <el-input type="text" id="dateRange" v-model="searchFields.d" clearable/>
       </div>
 
@@ -204,10 +204,23 @@ export default {
           !searchFields.value.p
       ) {
         errorMessage.value = 'At least one search field must be filled.';
-      } else {
-        errorMessage.value = '';
-        onSearch();
       }
+      // 验证 DATE RANGE 的格式
+      const datePattern = /^(?:\d{4}-\d{4}|\d{4})$/; // 允许 yyyy-yyyy 或 yyyy 格式
+      if (searchFields.value.d && !datePattern.test(searchFields.value.d)) {
+        errorMessage.value = 'Invalid DATE RANGE format. Use yyyy-yyyy or yyyy.';
+        return;
+      }
+      if (searchFields.value.d.includes('-')) {
+        const [startYear, endYear] = searchFields.value.d.split('-').map(Number);
+        if (startYear > endYear) {
+          errorMessage.value = 'The first year cannot be later than the second year.';
+          return;
+        }
+      }
+
+      errorMessage.value = '';
+      onSearch();
     }
 
 

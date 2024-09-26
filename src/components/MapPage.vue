@@ -47,6 +47,7 @@ import LeafletMapComponent from "@/components/LeafletMapComponent";
 import SelectedList from "@/components/SelectedList";
 import streamSaver from 'streamsaver';
 import 'web-streams-polyfill/dist/polyfill.es5';
+import axios from "axios";
 
 export default {
   name: "MapPage.vue",
@@ -112,7 +113,7 @@ export default {
             element: '#searchFields',  // 假设这是显示 ">>" 链接的元素
             popover: {
               title: 'Search Field Helper',
-              description: 'Some fields may contain a ">>" link, which opens a search helper to guide your search.',
+              description: 'Some fields may contain a dropdown list, which opens a search helper to guide your search.',
               position: 'left',
               align: 'center'
             }
@@ -249,6 +250,16 @@ export default {
 
     async function fetchOccurrences(params) {
       debouncedFetchOccurrences(params);
+    }
+
+    async function getJwtToken() {
+      try {
+        const response = await axios.get(process.env.VUE_APP_API_BASE_URL + '/clients');
+        return response.data.token; // 假设返回的是 { token: 'jwt-token-value' }
+      } catch (error) {
+        console.error('Error fetching JWT:', error);
+        return null;
+      }
     }
 
 
@@ -401,6 +412,12 @@ export default {
     // };
 
     async function handleDownload({ type, tab }) {
+      const jwtToken = await getJwtToken(); // Retrieve the JWT token
+
+      if (!jwtToken) {
+        console.error('Failed to retrieve token.');
+        return;
+      }
       try {
         let url;
         switch (tab) {
@@ -414,7 +431,7 @@ export default {
             url = `${process.env.VUE_APP_API_BASE_URL}/providers`;
             break;
           case 'extraInfo':
-            url = `${process.env.VUE_APP_API_BASE_URL}/location`;
+            url = `${process.env.VUE_APP_API_BASE_URL}/locations`;
             break;
           default:
             throw new Error('Invalid tab type');
@@ -424,6 +441,10 @@ export default {
         const params = new URLSearchParams(currParams);
         const response = await fetch(`${url}/?${params.toString()}`, {
           method: 'GET',
+          headers: {
+          'Content-Type': 'application/json',
+           'Authorization': `Bearer ${jwtToken}` // Add JWT token to the request header
+          }
         });
 
         if (!response.ok) {
@@ -599,7 +620,7 @@ export default {
 }
 
 .driver-popover.driverjs-theme .driver-popover-title {
-  font-size: 20px;
+  font-size: 15px;
 }
 
 .driver-popover.driverjs-theme .driver-popover-title,
@@ -615,7 +636,7 @@ export default {
   color: #ffffff;
   border: 2px solid #000;
   text-shadow: none;
-  font-size: 14px;
+  font-size: 12px;
   padding: 5px 8px;
   border-radius: 6px;
 }
