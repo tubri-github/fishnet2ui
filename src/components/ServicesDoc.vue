@@ -24,116 +24,178 @@
 
       <section class="section">
         <h3>Taxa service</h3>
-        <p><b>Location:</b> <a href="http://www.fishnet2.net/api/v1/taxa/">http://www.fishnet2.net/api/v1/taxa/</a></p>
-        <p><b>Inputs:</b> See the Parameters section, below.</p>
-        <p><b>Output:</b> Default output includes the scientific names, and the number of occurrences of the scientific name matching the query parameters.</p>
-        <p><b>Examples:</b>
-          <br> <a href="http://www.fishnet2.net/api/v1/taxa/?key=MYKEY&genus=cynodon&species=spilotus">http://www.fishnet2.net/api/v1/taxa/?key=MYKEY&genus=cynodon&species=spilotus</a>
-          <br> <a href="http://www.fishnet2.net/api/v1/taxa/?key=MYKEY&genus=cynodon">http://www.fishnet2.net/api/v1/taxa/?key=MYKEY&genus=cynodon</a>
-          <br> <a href="http://www.fishnet2.net/api/v1/taxa/?key=MYKEY&family=cynodontidae">http://www.fishnet2.net/api/v1/taxa/?key=MYKEY&family=cynodontidae</a>
-        </p>
+        <ul>
+          <li><p><b>Location:</b> <a href="https://www.fishnet2.net/api/v1/taxa/">http://www.fishnet2.net/api/v1/taxa/</a></p></li>
+          <li><p><b>Inputs:</b> See the Parameters section, below.</p></li>
+          <li><p><b>Default Output:</b> ScientificName, Num Records</p></li>
+          <li> <p><b>Description:</b> The Taxa service outputs the scientific names, and the number of occurences of the scientific name matching the query parameters.</p></li>
+          <li><p><i>Examples:</i> 
+            <br><i> https://www.fishnet2.net/api/v1/taxa/?api=MyAPIKey&q=larva</i>
+            <br> <i>https://www.fishnet2.net/api/v1/taxa/?api=MyAPIKey&c=mnhn or usnm</i>
+          </p></li>
+        </ul>
       </section>
 
       <section class="section">
         <h3>Providers service</h3>
-        <p><b>Location:</b> <a href="http://www.fishnet2.net/api/v1/providers/">http://www.fishnet2.net/api/v1/providers/</a></p>
-        <p><b>Inputs:</b> See the Parameters section, below.</p>
-        <p><b>Output:</b> Default output includes the institution names, and the number of occurrences of the institution matching the query parameters.</p>
-        <p><b>Examples:</b>
-          <br> <a href="http://www.fishnet2.net/api/v1/providers/?key=MYKEY&inst_code=amnh">http://www.fishnet2.net/api/v1/providers/?key=MYKEY&inst_code=amnh</a>
-          <br> <a href="http://www.fishnet2.net/api/v1/providers/?key=MYKEY&country=USA">http://www.fishnet2.net/api/v1/providers/?key=MYKEY&country=USA</a>
-          <br> <a href="http://www.fishnet2.net/api/v1/providers/?key=MYKEY&state_province=New+York">http://www.fishnet2.net/api/v1/providers/?key=MYKEY&state_province=New+York</a>
-        </p>
+        <ul>
+            <li><p><b>Location:</b> <a href="https://www.fishnet2.net/api/v1/providers/">http://www.fishnet2.net/api/v1/providers/</a></p></li>
+            <li><p><b>Inputs:</b> See the Parameters section, below.</p></li>
+          <li><p><b>Default Output:</b> Institution, InstitutionCode, Num Records</p></li>
+          <li><p><b>Description:</b> The Taxa service outputs the scientific names, and the number of occurences of the scientific name matching the query parameters.</p></li>
+          <li><p><i>Examples:</i> 
+            <br> <i>https://www.fishnet2.net/api/v1/providers/?api=MyAPIKey&l=usa</i>
+            <br> <i>https://www.fishnet2.net/api/v1/providers/?api=MyAPIKey&d=1950-1975</i>
+          </p></li></ul>
       </section>
 
       <section class="section">
-        <h3>OccurrenceCount service</h3>
-        <p><b>Location:</b> <a href="http://www.fishnet2.net/api/v1/occurrencecount/">http://www.fishnet2.net/api/v1/occurrencecount/</a></p>
-        <p><b>Inputs:</b> See the Parameters section, below.</p>
-        <p><b>Output:</b> Default occurrence service outputs the total number of occurrences, query error state, and the total number of occurrences that geocode matching the query parameters.</p>
-        <p><b>Examples:</b>
-          <br> <a href="http://www.fishnet2.net/api/v1/occurrencecount/?key=MYKEY&family=Cynodontidae">http://www.fishnet2.net/api/v1/occurrencecount/?key=MYKEY&family=Cynodontidae</a>
-          <br> <a href="http://www.fishnet2.net/api/v1/occurrencecount/?key=MYKEY&country=USA">http://www.fishnet2.net/api/v1/occurrencecount/?key=MYKEY&country=USA</a>
-          <br> <a href="http://www.fishnet2.net/api/v1/occurrencecount/?key=MYKEY&genus=Cynodon">http://www.fishnet2.net/api/v1/occurrencecount/?key=MYKEY&genus=Cynodon</a>
-        </p>
+        <ul>
+          <li><h3>OccurrenceCount service</h3></li>
+          <li> <p><b>Location:</b> <a href="https://www.fishnet2.net/api/v1/occurrencecount/">http://www.fishnet2.net/api/v1/occurrencecount/</a></p></li>
+          <li><p><b>Inputs:</b> See the Parameters section, below.</p></li>
+          <li><p><b>Default Output:</b> TotRows, No Error, GeoTot </p></li>
+          <li> <p><b>Description:</b> The OccurrenceCount service outputs the total number of occurrences, query error state, and the total number of occurences that geocode matching the query parameters.</p></li>
+          <li> <p><i>Examples:</i> 
+            <br> <i>https://www.fishnet2.net/api/v1/occurrencecount/?api=MyAPIKey&q=ethanol or EtOH</i>
+            <br> <i> https://www.fishnet2.net/api/v1/occurrencecount/?api=MyAPIKey&p=POLYGON((-93.998292265615 32.615318339629,-92.471192656236 32.606063985828,-92.635987578112 31.235349580893,-90.988038359361 31.19776691287,-90.955079374988 30.395621231989,-93.94336062499 30.386144489302,-93.998292265615 32.615318339629))</i>
+          </p></li>
+        </ul>
       </section>
 
       <section class="section">
+
         <h3>Occurrence service</h3>
-        <p><b>Location:</b> <a href="http://www.fishnet2.net/api/v1/occurrence/">http://www.fishnet2.net/api/v1/occurrence/</a></p>
-        <p><b>Inputs:</b> See the Parameters section and the <a href="#">Additional Occurrence parameters</a> section, below.</p>
-        <p><b>Output:</b> Default output includes CatalogNumber, IndividualCount, ScientificName, Family, PreparationType, Tissues, Latitude, Longitude, CoordinateUncertaintyInMeters, HorizontalDatum, Country, StateProvince, County, Locality, Island, IslandGroup, VerbatimElevation, VerbatimDepth, YearCollected, MonthCollected, DayCollected, Collector, GeorefMethod, LatLongComments, BasisOfRecord, Remarks, DatasetName, and DatasetShortName.</p>
-        <p><b>Examples:</b>
-          <br> <a href="http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&family=Cynodontidae">http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&family=Cynodontidae</a>
-          <br> <a href="http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&country=USA">http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&country=USA</a>
-          <br> <a href="http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&genus=Cynodon">http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&genus=Cynodon</a>
-        </p>
+        <ul>
+          <li> <p><b>Location:</b> <a href="https://www.fishnet2.net/api/v1/occurrence/">http://www.fishnet2.net/api/v1/occurrence/</a></p></li>
+          <li><p><b>Inputs:</b> See the Parameters section and the <a href="#">Additional Occurrence parameters</a> section, below.</p></li>
+          <li><p><b>Default Output:</b> InstitutionCode, CollectionCode, CatalogNumber, IndividualCount, ScientificName, Family, PreparationType, Tissues, Latitude, Longitude, CoordinateUncertaintyInMeters, HorizontalDatum, Country, StateProvince, County, Island, IslandGroup, Locality, VerbatimElevation, VerbatimDepth, YearCollected, MonthCollected, DayCollected, Collector, GeorefMethod, LatLongComments, BasisOfRecord, Remarks, DateLastModified</p></li>
+          <li>  <p><b>Description:</b>The Occurrence service outputs the occurrence data matching the query parameters.</p></li>
+          <li>  <p><i>Examples:</i> 
+            <br> <i>https://www.fishnet2.net/api/v1/occurrence/?api=MyAPIKey&t=notropis venustus&l=louisiana</i>
+          </p></li>
+        </ul>
       </section>
 
       <section class="section">
         <h3>AvailableMaps service</h3>
-        <p><b>Location:</b> <a href="http://www.fishnet2.net/api/v1/availablemaps/">http://www.fishnet2.net/api/v1/availablemaps/</a></p>
-        <p><b>Inputs:</b> To show all of the maps, the &api parameter is required.
         <ul>
-          <li>All other parameters are optional. A list of all of the maps and the associated metadata will be provided by default.</li>
-          <li>The &map parameter can be used to query for selected maps.</li>
+          <li> <p><b>Location:</b> <a href="http://www.fishnet2.net/api/v1/availablemaps/">http://www.fishnet2.net/api/v1/availablemaps/</a></p></li>
+          <li> <p><b>Inputs:</b>
+            <ul>
+              <li>As with all services, the API parameter is required.</li>
+              <li>All other parameters are optional. A list of all of the maps and the associated metadata will be provided by default.</li>
+              <li>The q= parameter can be used to query for selected maps.
+                <p><i>Examples:</i> 
+                  <br>This query will return all of the maps for May or June
+                  <i>https://www.fishnet2.net/api/v1/availablemaps/?api=MyAPIKey&q=May or June</i>
+                  <br>This query will return all of the maps related to the Federal Fishery Closures
+                  <i>https://www.fishnet2.net/api/v1/availablemaps/?api=MyAPIKey&q=Fishery Closure</i>
+                </p>
+              </li>
+              <li>When returning a list, the format parameter (fmt=) and attachment parameters (att=) are available (see here for details and examples).</li>
+              <li>Instead of returning a list, use the download parameter d= with a map name to download a KML file corresponding to that FileName.
+                Example:
+                https://www.fishnet2.net/api/v1/availablemaps/?api=MyAPIKey&d=FisheryClosure_050210
+                https://www.fishnet2.net/api/v1/availablemaps/?api=MyAPIKey&d=NESDIS Anomaly RS2 6-24-10
+                You will receive an error message if the FileName does not exist.</li>
+            </ul>
+          </p></li>
+          <li> <p><b> Default Output:MapID, DisplayName, FileName, MapDescription</b></p></li>
+          <li>  <p><b>Description:</b>The Available Maps service outputs metadata about the maps currently available for querying against in our database with the &m= parameter, or it outputs a map in KML format.</p></li>
+          <li>  <p><i>Examples:</i> 
+            <br> <i>https://www.fishnet2.net/api/v1/availablemaps/?api=MyAPIKey</i>
+            <br> <i>https://www.fishnet2.net/api/v1/availablemaps/?api=MyAPIKey&q=May or June</i>
+            <br> <i>https://www.fishnet2.net/api/v1/availablemaps/?api=MyAPIKey&d=FisheryClosure_053110</i>
+          </p></li>
         </ul>
-        </p>
-        <p><b>Examples:</b>
-          <br> <a href="http://www.fishnet2.net/api/v1/availablemaps/?key=MYKEY&map=1">http://www.fishnet2.net/api/v1/availablemaps/?key=MYKEY&map=1</a>
-          <br> <a href="http://www.fishnet2.net/api/v1/availablemaps/?key=MYKEY&map=2">http://www.fishnet2.net/api/v1/availablemaps/?key=MYKEY&map=2</a>
-          <br> <a href="http://www.fishnet2.net/api/v1/availablemaps/?key=MYKEY&map=3">http://www.fishnet2.net/api/v1/availablemaps/?key=MYKEY&map=3</a>
-        </p>
       </section>
 
       <section class="section">
         <h3>Locations service</h3>
-        <p><b>Location:</b> <a href="http://www.fishnet2.net/api/v1/locations/">http://www.fishnet2.net/api/v1/locations/</a></p>
-        <p><b>Inputs:</b> See the Parameters section, below.</p>
-        <p><b>Output:</b> Default output includes the institution, institution code, and the number of occurrences of the institution matching the query parameters. The locations service outputs the country, state/province, county, locality, island, island group, and number of occurrences for the location matching the query parameters.</p>
-        <p><b>Examples:</b>
-          <br> <a href="http://www.fishnet2.net/api/v1/locations/?key=MYKEY&country=USA">http://www.fishnet2.net/api/v1/locations/?key=MYKEY&country=USA</a>
-          <br> <a href="http://www.fishnet2.net/api/v1/locations/?key=MYKEY&state_province=New+York">http://www.fishnet2.net/api/v1/locations/?key=MYKEY&state_province=New+York</a>
-          <br> <a href="http://www.fishnet2.net/api/v1/locations/?key=MYKEY&county=Kings">http://www.fishnet2.net/api/v1/locations/?key=MYKEY&county=Kings</a>
-        </p>
+        <ul>
+          <li> <p><b>Location:</b> <a href="http://www.fishnet2.net/api/v1/locations/">http://www.fishnet2.net/api/v1/locations/</a></p></li>
+          <li>  <p><b>Inputs:</b> See the Parameters section, below.</p></li>
+          <li> <p><b>Default output:</b>Country, StateProvince, County, Locality, Latitude, Longitude, Num Records </p></li>
+          <li>  <p><b>Description:</b>The Providers service outputs the institution, institution code, and the number of occurences of the institution matching the query parameters. The Locations service outputs the country, state/province, county, locality, latitude, longitude and the number of occurences for that location the query parameters.
+          </p></li>
+          <li>  <p><i>Examples:</i> 
+            <br> <i>https://www.fishnet2.net/api/v1/locations/?api=MyAPIKey&t=notropis venustus&d=2000-2010</i>
+          </p></li>
+        </ul>
       </section>
 
       <section class="section" id="apikey">
         <h2>Parameters</h2>
         <h3>Required API Key Parameter</h3>
-        <p><b>API Key:</b> All FishNet2 services require the &key parameter. Without a valid &key parameter, your query will not be processed. Yasin Bakis at <a href="mailto:ybakis@tulane.edu">ybakis@tulane.edu</a> for a key.</p>
-        <p><b>Format:</b> <a href="http://www.fishnet2.net/api/v1/keys/?key=MYKEY">http://www.fishnet2.net/api/v1/keys/?key=MYKEY</a></p>
+        <ui>
+          <li><b>API Key api=:</b><br> All FishNet2 services require the &key parameter. Without a valid &key parameter, your query will not be processed. Yasin Bakis at <a href="mailto:ybakis@tulane.edu">ybakis@tulane.edu</a> for a key.
+            <p><i>Examples:</i> <i>https://www.fishnet2.net/api/v1/taxa/?api=MyAPIKey</i></p></li>
+        </ui>
       </section>
 
       <section class="section" id="allReq">
         <h3 >Query parameters for all services</h3>
         <p><b >REQUIRED:</b> At least one of the following parameters is required, though any or all can be permitted in a single query.</p>
         <ul>
-          <li><b>Taxon:</b> Use this to search scientific and family names. It supports the 'OR' operator, permitting the search of multiple taxa with one query.
-            <br> <b>Format:</b> <a href="http://www.fishnet2.net/api/v1/taxa/?key=MYKEY&genus=cynodon&species=spilotus">http://www.fishnet2.net/api/v1/taxa/?key=MYKEY&genus=cynodon&species=spilotus</a>
-            <br> <b>Examples:</b> <a href="http://www.fishnet2.net/api/v1/taxa/?key=MYKEY&family=cynodontidae">http://www.fishnet2.net/api/v1/taxa/?key=MYKEY&family=cynodontidae</a>
+          <li><b>Taxon: t=</b><br>Use this to search scientific and family names. It supports the 'OR' operator, permitting the search of multiple taxa with one query.
+            <p><i>Examples:</i> 
+              <br> <i>https://www.fishnet2.net/api/v1/taxa/?api=MyAPIKey&t=notropis</i>
+              <br> <i>https://www.fishnet2.net/api/v1/taxa/?api=MyAPIKey&t=notropis or nezumia</i>
+              <br> <i>https://www.fishnet2.net/api/v1/taxa/?api=MyAPIKey&t=Blenniidae</i>
+              </p>
           </li>
-          <li><b>Location:</b> Use this to search country, continent, county, ocean, island, state, province and locality. It supports the 'OR' operator, permitting the search of multiple locations with one query.
-            <br> <b>Format:</b> <a href="http://www.fishnet2.net/api/v1/locations/?key=MYKEY&country=USA">http://www.fishnet2.net/api/v1/locations/?key=MYKEY&country=USA</a>
-            <br> <b>Examples:</b> <a href="http://www.fishnet2.net/api/v1/locations/?key=MYKEY&state_province=New+York">http://www.fishnet2.net/api/v1/locations/?key=MYKEY&state_province=New+York</a>
+          <li><b>Location: l=</b><br> Use this to search country, continent, county, ocean, island, state, province and locality. It supports the 'OR' operator, permitting the search of multiple locations with one query.
+            <p><i>Examples:</i> 
+              <br> <i>https://www.fishnet2.net/api/v1/taxa/?api=MyAPIKey&l=usa</i>
+              <br> <i>https://www.fishnet2.net/api/v1/taxa/?api=MyAPIKey&l=alabama or gulf of mexico</i>
+              <br> <i>https://www.fishnet2.net/api/v1/taxa/?api=MyAPIKey&t=Africa</i>
+            </p>
+          <p class="inner">
+            You may also restrict your search to the continent/ocean, country, state/province and/or county fields by using the continentocean, country, stateprovince and/or county delimiters in the following format:
+            [delimiter]:[search term] - (e.g. county:orleans)
+            Multiple delimiters/search term combinations should be separated with semicolons:
+            [delimiter]:[search term];[delimiter]:[search term] - (e.g. stateprovince:illinois;county:cook)
+          </p>
+            <p><i>Examples:</i> 
+              <br>This query will return occurrences matching the state of Mississippi, and not occurrences outside of that state of Mississippi that happen to have the word 'Mississippi' (e.g. 'Mississippi River') in the Locality field.
+                <i>https://www.fishnet2.net/api/v1/locations/?api=MyAPIKey&l=stateprovince:Mississippi</i>
+              <br> This query will return all occurrences that have been collected in Grand County, Utah.
+                <i>https://www.fishnet2.net/api/vi/locations/?api=MyAPIKey&l=stateprovince:Utah;county:Grand</i>
+            </p>
           </li>
-          <li><b>Catalog Number:</b> Use this to search by Catalog Number and/or Institution Code. It supports the 'OR' operator, permitting the search of multiple Catalog Numbers and/or Institution Codes with one query.
-            <br> <b>Format:</b> <a href="http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&catalog_number=12345">http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&catalog_number=12345</a>
-            <br> <b>Examples:</b> <a href="http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&catalog_number=54321">http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&catalog_number=54321</a>
+          <li><b>Catalog Number/Institution Code: c=:</b><br> Use this to search by Catalog Number and/or Institution Code. It supports the 'OR' operator, permitting the search of multiple Catalog Numbers and/or Institution Codes with one query.
+            <p><i>Examples:</i> <br>
+              <i>https://www.fishnet2.net/api/v1/taxa/?api=MyAPIKey&c=TU 1</i>
+              <i>https://www.fishnet2.net/api/v1/taxa/?api=MyAPIKey&c=mnhn or usnm</i>
+              <i>https://www.fishnet2.net/api/v1/taxa/?api=MyAPIKey&c=ku 29288 or tu 66762</i>
+            </p>
           </li>
           <section id="dr">
-          <li><b>Date Range:</b> Dates are given by the year or by the year and month for ranges of interest. Date ranges must be in YYYY-MM format.
-            <br> <b>Format:</b> <a href="http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&start_date=2000&end_date=2020">http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&start_date=2000&end_date=2020</a>
-            <br> <b>Examples:</b> <a href="http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&start_date=1990&end_date=2000">http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&start_date=1990&end_date=2000</a>
+          <li><b>Date Range d=:</b><br> Use this to search by the year or years the occurrence was collected. Date Ranges must be in yyyy-yyyy format.
+            <p><i>Examples:</i> <br>
+              <i>https://www.fishnet2.net/api/v1/taxa/?api=MyAPIKey&d=2000-2000</i>
+              <i>https://www.fishnet2.net/api/v1/taxa/?api=MyAPIKey&d=1950-1975</i>
+            </p>
           </li></section>
-          <li><b>Other:</b> Use this to search for terms of interest that may be in the remarks, notes, scientific name, collectors, preparation type, location fields or elsewhere in the occurrence. It supports the 'OR' operator, permitting the search of multiple terms with one query.
-            <br> <b>Format:</b> <a href="http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&other=remarks">http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&other=remarks</a>
-            <br> <b>Examples:</b> <a href="http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&other=collector">http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&other=collector</a>
+          <li><b>Other: q=</b><br> Use this to search for terms of interest that may be in the remarks, notes, scientific name, collector, preparation type, location fields or elsewhere in the occurrence. It supports the 'OR' operator, permitting the search of multiple terms with one query.
+            <p><i>Examples:</i> <br>
+              <i>https://www.fishnet2.net/api/v1/taxa/?api=MyAPIKey&q=larva</i>
+              <i>https://www.fishnet2.net/api/v1/taxa/?api=MyAPIKey&q=ethanol or EtOH</i>
+            </p>
           </li>
-          <section id="geo">
-            <li><b>Geometry:</b> Records within a geographic area defined by one of the available maps. Maps are designated by MapIDs (see <a href="http://www.fishnet2.net/api/v1/availablemaps/">AvailableMaps</a> for a list of valid MapIDs). Note that the Map parameter and the Geometry parameter (see above) are mutually exclusive. If both are submitted, the Map parameter will be ignored.
-              <br> <b>Format:</b> <a href="http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&geometry=POLYGON((...))">http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&geometry=POLYGON((...))</a>
-              <br> <b>Examples:</b> <a href="http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&geometry=POLYGON((-112,45,-100,45,-100,40,-112,40,-112,45))">http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&geometry=POLYGON((-112,45,-100,45,-100,40,-112,40,-112,45))</a>
+          <section id="geo"><br>
+            <li><b>Geometry p=:</b><br>Use this to define a geometric query in well-known text (WKT) format. Input polygons are limited to 250 vertices or 10,000 characters. Note that the Map parameter and the Geometry parameter (see below) are mutually exclusive. If both are submitted, the Map parameter will be ignored.
+              <p><i>Examples:</i> <br>
+                <i>https://www.fishnet2.net/api/v1/taxa/?api=MyAPIKey&p=POLYGON((-93.998292265615 32.615318339629,-92.471192656236 32.606063985828,-92.635987578112 31.235349580893,-90.988038359361 31.19776691287,-90.955079374988 30.395621231989,-93.94336062499 30.386144489302,-93.998292265615 32.615318339629))</i>
+              </p>
+            </li>
+          </section>
+          <section id="map">
+            <li><b>Map m=:</b><br> Records within a geographic area defined by one of the available maps. Maps are designated by MapIDs (see <a href="http://www.fishnet2.net/api/v1/availablemaps/">AvailableMaps</a> for a list of valid MapIDs). Note that the Map parameter and the Geometry parameter (see above) are mutually exclusive. If both are submitted, the Map parameter will be ignored.
+              <p><i>Examples:</i> <br>
+                <i>https://www.fishnet2.net/api/v1/taxa/?api=MyAPIKey&m=14</i>
+              </p>
             </li>
           </section>
         </ul>
@@ -143,9 +205,17 @@
         <h3>Optional parameters</h3>
         <p>The following parameters are optional, and may be added to any query that also includes the required parameters.</p>
         <ul>
-          <li><b>Format:</b> Use &format=txt for tab-delimited text or &format=csv for comma-separated values. If no format parameter is provided, the default value is 'csv'.</li>
-          <li><b>Attachment:</b> Use &attachment=1 (or '0' or 'open'). If no attachment parameter is provided, the default value is '0'. When &attachment is set to '1' or 'open', the service appends a file name to the response header. This will allow enabled browsers to render the search results as a file attachment.
-            <br> <b>Format:</b> <a href="http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&format=txt&attachment=1">http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&format=txt&attachment=1</a>
+          <li><b>Format fmt=:</b><br> Valid values are 'txt' (tab-delimited text) or 'csv' (comma-separated values). If no format parameter is provided, the default value is 'csv'.
+            <p><i>Examples:</i> <br>
+              <i>https://www.fishnet2.net/api/v1/taxa/?api=MyAPIKey&t=notropis venustus&l=louisiana&fmt=txt
+              </i>
+            </p>
+          </li>
+          <li><b>Attachment: att=</b><br> Valid values are '1' or '0' (zero). If no attachment parameter is provided, the default value is '0'. When &att=1, the service appends a file name to the response header. This will allow enabled clients (e.g. web browsers) to recieve the search results as a file attachment.
+            <p><i>Examples:</i> <br>
+              <i>https://www.fishnet2.net/api/v1/taxa/?api=MyAPIKey&t=notropis venustus&l=louisiana&fmt=txt&att=1
+              </i>
+            </p>
           </li>
         </ul>
       </section>
@@ -154,17 +224,42 @@
         <h3>Additional parameters for the Occurrence service</h3>
         <p>The following are optional parameters for the Occurrence service, and may be added to any query that also includes the required parameters.</p>
         <ul>
-          <li><b>Columns:</b> This is a comma-delimited list of column names, to specify the columns and order of columns to be returned by your search query. All columns are returned by default.
-            <br> <b>Format:</b> <a href="http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&columns=taxon,location">http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&columns=taxon,location</a>
+          <li><b>Columns: cols=</b><br> Use this parameter, followed by a comma-delimited list of column names, to specify the columns and order of columns to be returned by your search query. All columns are returned by default, in the sequence shown below.
+            <p><i>Examples:</i> <br>
+              <i>
+                https://www.fishnet2.net/api/v1/occurrence/?api=MyAPIKey&l=louisiana&cols=Latitude,Longitude,Family,ScientificName,IndividualCount,Remarks
+              </i>
+            </p>
+            <p class="inner">Valid column names (in default order):</p>
+             <p>InstitutionCode, CollectionCode, CatalogNumber, IndividualCount, ScientificName, Family, PreparationType, Tissues, Latitude, Longitude, CoordinateUncertaintyInMeters, HorizontalDatum, Country, StateProvince, County, Island, IslandGroup, Locality, VerbatimElevation, VerbatimDepth, YearCollected, MonthCollected, DayCollected, Collector, GeorefMethod, LatLongComments, BasisOfRecord, Remarks, DateLastModified
+             </p>
           </li>
-          <li><b>Number of occurrences to return:</b> Use this parameter to limit the number of occurrences to be returned. The maximum value of 10,000 is permitted for any single query. By default, all results will be returned, even if the number of occurrences exceeds 10,000.
-            <br> <b>Format:</b> <a href="http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&limit=1000">http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&limit=1000</a>
+          <li><b>Number of occurrences: num=</b><br>Use this parameter to limit the number of occurrences returned by the service. A maximum value of 10000 is permitted for any single query. By default all results will be returned, even if the number of occurrences returned exceeds 10,000.
+            <i>Examples:</i> <br>
+              <p class="inner">This query will return the first 10 results</p>
+              <i>https://www.fishnet2.net/api/v1/occurrence/?api=MyAPIKey&l=louisiana&fmt=txt&num=10
+              </i>
+              <p class="inner">This query will return 1000 results, beginning with the 1000th record (see below)</p>
+              <i>https://www.fishnet2.net/api/v1/occurrence/?api=MyAPIKey&c=tu&set=1000&num=1000
+              </i>
           </li>
-          <li><b>Start with a given row:</b> Use this parameter to begin the return of results at the given row. This parameter can be used for paging by specifying the first occurrence to be returned for the set of search results. By default, the first occurrence is always set to 1. If a value is specified for this parameter that exceeds the number of records in the result set, no occurrences will be returned.
-            <br> <b>Format:</b> <a href="http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&start=101">http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&start=101</a>
-          </li>
-          <li><b>Return results without the column names:</b> Use this to suppress the return of the column names in the first row of the output. Valid values are '1' or '0' (zero). By default the value is set to '0', and column names will always be returned with any results.
-            <br> <b>Format:</b> <a href="http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&include_column_names=0">http://www.fishnet2.net/api/v1/occurrence/?key=MYKEY&include_column_names=0</a>
+          <li><b>Start value: set=</b><br>For any given search, results will always be returned in the same order. Use this parameter to take control of paging by specifying the first occurrence to be returned for the set of search results. By default, the first occurrence is always set to 1. If a value is specified for this parameter that exceeds the number of records in the result set, no occurrences will be returned.
+            <i>Examples:</i> <br>
+              <p class="inner">This query will return all results beginning with the 10th</p>
+              <i>https://www.fishnet2.net/api/v1/occurrence/?api=MyAPIKey&d=2010-2011&fmt=txt&set=10
+              </i>
+              <p class="inner">This query will return 1000 results, beginning with the first record - i.e. occurrences 1-1000</p>
+              <i>https://www.fishnet2.net/api/v1/occurrence/?api=MyAPIKey&c=tu&num=1000&set=1
+              </i>
+              <p class="inner">This query will return 1000 results, beginning with the 1001st record - i.e. occurrences 1001-2000</p>
+              <i>https://www.fishnet2.net/api/v1/occurrence/?api=MyAPIKey&c=tu&num=1000&set=1001
+              </i>
+            </li>
+          <li><b>No Column Headers: hdr=0</b><br> Set this value to '0' to return results without the column names included as part of the result set. Valid values are '1' or '0' (zero). By default the value is set to '1', and column names will always be included as the first row returned by a result set, even for queries that do not return any results.
+            <p><i>Examples:</i> <br>
+              <i>https://www.fishnet2.net/api/v1/occurrence/?api=MyAPIKey&c=tu&set=1000&num=1000&hdr=0
+              </i>
+            </p>
           </li>
         </ul>
       </section>
@@ -187,7 +282,9 @@ export default {
   padding: 20px;
   text-align: left;
 }
-
+i{
+  font-size: 12px;
+}
 h1 {
   color: #007bff;
   font-family: 'Open Sans', sans-serif;
@@ -199,14 +296,20 @@ h2, h3 {
   font-family: 'Open Sans', sans-serif;
   margin-top: 20px;
 }
-
+b{
+  color: #436c9a;
+}
 p, ul, li {
   color: #555;
   font-family: 'Open Sans', sans-serif;
+  font-size:16px;
   line-height: 1.6;
   margin-bottom: 10px;
 }
-
+li{
+  font-size:14px;
+  font-weight: lighter;
+}
 a {
   color: #007bff;
   text-decoration: none;
@@ -214,6 +317,9 @@ a {
 
 a:hover {
   text-decoration: underline;
+}
+p.inner{
+  font-size: 12px;
 }
 
 .section {

@@ -96,7 +96,7 @@ export default {
               title: 'Hello, FishNet2 community!\n',
               description:
                   '<p>We\'re excited to announce a fresh new look for FishNet! We\'ve given our interface a makeover to enhance your experience while keeping all the features and APIs you used to have. We are currently working on more exciting updates coming next!</p>' +
-                  '<p style="font-size:20px">Having issues? Contact us at <a href="mailto:fishnet2@tulane.edu">fishnet2@tulane.edu</a> or visit our <a href="https://github.com/tubri/Fishnet2Community/discussions"> GitHub community</a></p>',
+                  '<p style="font-size:20px">Having issues? Contact us via <a href="mailto:fishnet2@tulane.edu">fishnet2@tulane.edu</a> or visit our <a href="https://github.com/tubri/Fishnet2Community/discussions"> GitHub community</a>to submit an error report.</p>',
               position: 'center',
             }
           },
