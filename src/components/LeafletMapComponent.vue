@@ -7,10 +7,11 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-draw/dist/leaflet.draw.css';
 import 'leaflet-draw';
-import {onBeforeUnmount, onMounted, ref, watch} from "vue";
+import {onBeforeUnmount, onMounted, ref, watch,h, createApp} from "vue";
 import {driver} from "driver.js";
 import '@/assets/driver_theme.css';
 import 'driver.js/dist/driver.css';
+import { ElCollapse, ElCollapseItem } from 'element-plus';
 
 export default {
   name: 'LeafletMapComponent',
@@ -115,6 +116,35 @@ export default {
       localStorage.setItem('hasSeenTableTour', true); // 标记用户已经看过引导
     };
 
+    const addColorLegend = () => {
+      const legend = L.control({ position: 'topright' });
+
+      legend.onAdd = function () {
+        const div = L.DomUtil.create('div', 'info legend hidden custom-legend');
+        const grades = [1, 6, 11, 16, 21];
+        const colors = ['#6baed6', '#74c476', '#fd8d3c', '#e6550d', '#de2d26'];
+        const descriptions = ['1', '2 - 10', '11 - 20', '21 - 30', '31+'];
+
+        for (let i = 0; i < grades.length; i++) {
+          div.innerHTML +=
+              `<div class="legend-item">
+           <i style="background:${colors[i]};"></i>
+           <span>${descriptions[i]}</span>
+         </div>`;
+        }
+        return div;
+      };
+
+      legend.addTo(map);
+    };
+
+    const toggleLegendDisplay = (show) => {
+      const legend = document.querySelector('.info.legend');
+      if (legend) {
+        legend.classList.toggle('hidden', !show);
+      }
+    };
+
 
 
     const updateMapFocus = (items) => {
@@ -127,6 +157,152 @@ export default {
       }
     };
 
+    const getColorByCount = (count) => {
+      if (count === 1) return '#6baed6'; // 蓝色
+      if (count <= 10) return '#74c476'; // 绿色
+      if (count <= 20) return '#fd8d3c'; // 黄色
+      if (count <= 30) return '#e6550d'; // 橙色
+      return '#de2d26'; // 红色
+    };
+
+
+    const groupItemsByCoordinates = (items) => {
+      const groupedItems = {};
+      items.forEach((item) => {
+        const key = `${item.Latitude},${item.Longitude}`;
+        if (!groupedItems[key]) {
+          groupedItems[key] = [];
+        }
+        groupedItems[key].push(item);
+      });
+      return groupedItems;
+    };
+
+    const addGroupedMarkers = (groupedItems) => {
+      markersLayer.clearLayers();
+      toggleLegendDisplay(Object.keys(groupedItems).length > 0); // 如果有 markers，显示图例
+
+
+      Object.entries(groupedItems).forEach(([key, items]) => {
+        const [lat, lng] = key.split(',').map(Number);
+        const color = getColorByCount(items.length);
+
+        // 创建自定义图标元素
+        const iconElement = document.createElement('i');
+        iconElement.className = 'fa fa-fish'; // 使用 FontAwesome 鱼图标
+        iconElement.style.color = color; // 设置颜色
+        //iconElement.style.fontSize = '20px'; // 设置字体大小
+        iconElement.ariaHidden = true;
+        iconElement.style.textShadow = '1px 1px 2px #000, -1px -1px 2px #000, 1px -1px 2px #000, -1px 1px 2px #000'; // 模拟边界效果
+
+
+
+        const marker = L.marker([lat, lng], {
+          icon: L.divIcon({
+            html:  iconElement.outerHTML,
+            className: 'custom-icon',
+            iconSize: L.point(20, 20),
+            iconAnchor: L.point(10, 20)
+          })
+        });
+
+
+        // 创建弹出窗口内容
+        const container = document.createElement('div');
+        container.classList.add('custom-popup'); // 应用自定义样式
+
+        // 如果只有一个点，直接显示详细信息
+        if (items.length === 1) {
+          // 单个点的情况，使用 ElCollapse 展示信息
+          const collapseContent = h(
+              ElCollapse,
+              {
+                accordion: true,
+                modelValue: ['0'],
+              },
+              () => [
+                h(
+                    ElCollapseItem,
+                    {
+                      title: `${items[0].ScientificName} (${items[0].CatalogNumber})`,
+                      name: '0',
+                    },
+                    () =>
+                        h('div', { class: 'custom-popup' }, [
+                          h('div', { class: 'popup-title' }, `${items[0].InstitutionCode} ${items[0].CatalogNumber}`),
+                          h('div', {}, [
+                            h('span', { class: 'popup-key' }, 'Species: '), h('span', { class: 'popup-value' }, `${items[0].ScientificName}`),
+                            h('br'),
+                            h('span', { class: 'popup-key' }, 'No. of Specimens: '), h('span', { class: 'popup-value' }, `${items[0].IndividualCount}`),
+                            h('br'),
+                            h('span', { class: 'popup-key' }, 'Locality: '), h('span', { class: 'popup-value' }, `${items[0].Locality}`),
+                            h('br'),
+                            h('span', { class: 'popup-key' }, 'Collector: '), h('span', { class: 'popup-value' }, `${items[0].Collector}`),
+                            h('br'),
+                            h('span', { class: 'popup-key' }, 'Date Collected: '), h('span', { class: 'popup-value' }, `${items[0].MonthCollected}/${items[0].DayCollected}/${items[0].YearCollected}`)
+                          ])
+                        ])
+                )
+              ]
+          );
+
+          // 增加大标题，包含坐标信息
+          const popupHeader = h(
+              'div',
+              { class: 'popup-header' },
+              `Selected Record [${items[0].Latitude}, ${items[0].Longitude}]`
+          );
+
+          // 将大标题和 collapse 内容结合
+          const app = createApp({ render: () => h('div', [popupHeader, collapseContent]) });
+          app.mount(container);
+        } else {
+          // 如果有多个点，使用 Vue render 函数创建 ElCollapse 组件
+          const collapseContent = h(ElCollapse,
+              {
+                accordion: true, //only expand 1 record every time.
+              },
+              () =>
+              items.map((item, index) =>
+                  h(ElCollapseItem,
+                      { title: `${item.ScientificName} (${item.CatalogNumber})`,
+                              name: index.toString()
+                      }, () =>
+                      h('div', { class: 'custom-popup' }, [
+                        h('div', { class: 'popup-title' }, `${item.InstitutionCode} ${item.CatalogNumber}`),
+                        h('div', {}, [
+                          h('span', { class: 'popup-key'  }, 'Species: '), `${item.ScientificName}`,
+                          h('br'),
+                          h('span', { class: 'popup-key' }, 'No. of Specimens: '), `${item.IndividualCount}`,
+                          h('br'),
+                          h('span', { class: 'popup-key'  }, 'Locality: '), `${item.Locality}`,
+                          h('br'),
+                          h('span', { class: 'popup-key'  }, 'Collector: '), `${item.Collector}`,
+                          h('br'),
+                          h('span', { class: 'popup-key'  }, 'Date Collected: '), `${item.MonthCollected}/${item.DayCollected}/${item.YearCollected}`
+                        ])
+                      ])
+                  )
+              )
+          );
+
+          // 增加大标题，包含坐标信息
+          const popupHeader = h(
+              'div',
+              { class: 'popup-header' },
+              `Selected Records [${items[0].Latitude}, ${items[0].Longitude}]`
+          );
+          // const container = document.createElement('div');
+          const app = createApp({ render: () => h('div', [popupHeader, collapseContent]) });
+          app.mount(container);
+
+
+        }
+        marker.bindPopup(container);
+        marker.addTo(markersLayer);
+      });
+    };
+
     onMounted(() => {
       // 初始化地图
       map = L.map(mapContainer.value).setView([51.505, -0.09], 3);
@@ -134,6 +310,7 @@ export default {
         maxZoom: 18,
         attribution:'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
       }).addTo(map);
+
 
 
 
@@ -173,6 +350,8 @@ export default {
       });
       if (props.showPaginationButtons) {
         addPaginationControls();
+        addColorLegend();
+        toggleLegendDisplay();
       }
     });
 
@@ -255,31 +434,34 @@ export default {
     }, { flush: 'post' });
 
     watch(() => props.selectedItems, (newItems) => {
-      markersLayer.clearLayers();
-      newItems.forEach(item => {
-        if (item.Latitude && item.Longitude) {
-          const icon = L.divIcon({
-            html: '<i class="fa fa-map-pin" aria-hidden="true"></i>',
-            className: 'custom-icon',
-            iconSize: L.point(20, 20),
-            iconAnchor: L.point(10, 20)
-          });
-
-          L.marker([item.Latitude, item.Longitude], { icon })
-              .addTo(markersLayer)
-              .bindPopup( `<div style="font-family: Arial, sans-serif; font-size: 14px; padding: 10px; max-width: 300px;">
-                <div style="font-weight: bold; font-size: 16px; margin-bottom: 8px;">${item.InstitutionCode} ${item.CatalogNumber}</div>
-                <div>
-                  <span style="font-weight: bold;">Species:</span> ${item.ScientificName}<br>
-                  <span style="font-weight: bold;">No. of Specimens:</span> ${item.IndividualCount}<br>
-                  <span style="font-weight: bold;">Locality:</span> ${item.Locality}<br>
-                  <span style="font-weight: bold;">Collector:</span> ${item.Collector}<br>
-                  <span style="font-weight: bold;">Date Collected:</span> ${item.MonthCollected}/${item.DayCollected}/${item.YearCollected}
-                </div>
-              </div>`);
-        }
-      });
-      updateMapFocus(newItems)
+      const groupedItems = groupItemsByCoordinates(newItems);
+      addGroupedMarkers(groupedItems);
+      updateMapFocus(newItems);
+      // markersLayer.clearLayers();
+      // newItems.forEach(item => {
+      //   if (item.Latitude && item.Longitude) {
+      //     const icon = L.divIcon({
+      //       html: '<i class="fa fa-map-pin" aria-hidden="true"></i>',
+      //       className: 'custom-icon',
+      //       iconSize: L.point(20, 20),
+      //       iconAnchor: L.point(10, 20)
+      //     });
+      //
+      //     L.marker([item.Latitude, item.Longitude], { icon })
+      //         .addTo(markersLayer)
+      //         .bindPopup( `<div style="font-family: Arial, sans-serif; font-size: 14px; padding: 10px; max-width: 300px;">
+      //           <div style="font-weight: bold; font-size: 16px; margin-bottom: 8px;">${item.InstitutionCode} ${item.CatalogNumber}</div>
+      //           <div>
+      //             <span style="font-weight: bold;">Species:</span> ${item.ScientificName}<br>
+      //             <span style="font-weight: bold;">No. of Specimens:</span> ${item.IndividualCount}<br>
+      //             <span style="font-weight: bold;">Locality:</span> ${item.Locality}<br>
+      //             <span style="font-weight: bold;">Collector:</span> ${item.Collector}<br>
+      //             <span style="font-weight: bold;">Date Collected:</span> ${item.MonthCollected}/${item.DayCollected}/${item.YearCollected}
+      //           </div>
+      //         </div>`);
+      //   }
+      // });
+      // updateMapFocus(newItems)
     });
 
     onBeforeUnmount(() => {
@@ -350,9 +532,13 @@ export default {
   left: -12px;*/ /*this will lead to markers offset on the map while zoom in/out*/
 }
 .leaflet-right{
-  left: 50%;
-  transform: translateX(-50%);
-  right: auto;
+  display:flex;
+  /*left: 50%;*/
+  /*transform: translateX(-50%);
+  right: auto;*/
+}
+.leaflet-bar{
+  border: none !important;
 }
 .pagination-container {
   display: flex;
@@ -362,9 +548,8 @@ export default {
   border-radius: 5px;
   padding: 5px;
   position: absolute;
-  top: 10px;
   z-index: 1000;
-  transform: translateX(-50%);
+  transform: translateX(-100%);
 }
 
 .page-info {
@@ -377,5 +562,118 @@ export default {
   font-style: italic;
   color: red;
 }
+/* Leaflet 自带的 Popup 样式调整 */
+.leaflet-popup-content-wrapper {
+  border-radius: 8px !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2) !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+.leaflet-popup-tip {
+  display: none !important; /* 隐藏默认的箭头 */
+}
+
+.leaflet-popup-content {
+  width:100%  !important;
+  margin: 0 !important;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 13px !important;
+  font-weight: normal !important;
+  color: #333;
+  line-height: 1.4;
+}
+
+.custom-popup {
+  width: 380px;
+  max-height: 350px;
+  overflow-y: auto;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  padding: 10px;
+  color: #333;
+  border: none;
+  word-wrap: break-word;
+}
+
+.popup-header {
+  font-size: 15px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px;
+  color: #2c3e50;
+}
+
+.popup-title {
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: #2c3e50;
+}
+
+.popup-key {
+  font-weight: bold;
+  color: #1a73e8;
+}
+
+.popup-value {
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.el-collapse {
+  border: none; /* 去掉 Collapse 的边框 */
+  box-shadow: none; /* 去掉阴影 */
+}
+
+.el-collapse-item {
+  border-bottom: none; /* 移除项之间的边框 */
+}
+
+.el-collapse-item__header {
+  font-weight: bold;
+  color: #333;
+}
+
+.el-collapse-item__arrow {
+  color: #1a73e8; /* 箭头的颜色 */
+}
+
+
+.info.legend.hidden {
+  display: none;
+}
+.info.legend.custom-legend {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.2;
+  border-radius: 6px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  border: 1px solid #ccc;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.legend-item i {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+}
+
+.legend-item span {
+  display: inline-block;
+  color: #333;
+  vertical-align: middle;
+}
+
 
 </style>

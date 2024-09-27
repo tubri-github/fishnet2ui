@@ -180,7 +180,7 @@ export default {
       if (fields.stateProvince) parts.push(`StateProvince:${fields.stateProvince}`);
       if (fields.county) parts.push(`County:${fields.county}`);
 
-      searchFields.value.l = parts.join('; ');
+      searchFields.value.l = parts.join(';');
       showLocationTooltip.value = false;
     }
     function toggleDropdown() {
@@ -204,6 +204,7 @@ export default {
           !searchFields.value.p
       ) {
         errorMessage.value = 'At least one search field must be filled.';
+        return;
       }
       // 验证 DATE RANGE 的格式
       const datePattern = /^(?:\d{4}-\d{4}|\d{4})$/; // 允许 yyyy-yyyy 或 yyyy 格式
