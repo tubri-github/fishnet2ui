@@ -120,7 +120,7 @@ export default {
       const legend = L.control({ position: 'topright' });
 
       legend.onAdd = function () {
-        const div = L.DomUtil.create('div', 'info legend hidden custom-legend');
+        const div = L.DomUtil.create('div', 'info legend custom-legend');
         const grades = [1, 6, 11, 16, 21];
         const colors = ['#6baed6', '#74c476', '#fd8d3c', '#e6550d', '#de2d26'];
         const descriptions = ['1', '2 - 10', '11 - 20', '21 - 30', '31+'];
@@ -136,13 +136,6 @@ export default {
       };
 
       legend.addTo(map);
-    };
-
-    const toggleLegendDisplay = (show) => {
-      const legend = document.querySelector('.info.legend');
-      if (legend) {
-        legend.classList.toggle('hidden', !show);
-      }
     };
 
 
@@ -180,7 +173,6 @@ export default {
 
     const addGroupedMarkers = (groupedItems) => {
       markersLayer.clearLayers();
-      toggleLegendDisplay(Object.keys(groupedItems).length > 0); // 如果有 markers，显示图例
 
 
       Object.entries(groupedItems).forEach(([key, items]) => {
@@ -351,7 +343,6 @@ export default {
       if (props.showPaginationButtons) {
         addPaginationControls();
         addColorLegend();
-        toggleLegendDisplay();
       }
     });
 
@@ -428,6 +419,7 @@ export default {
       if (!paginationControlInstance) {
         // 确保控件在第一次搜索后初始化，无论是否有结果
         addPaginationControls();
+        addColorLegend();
       }
         updatePaginationInfo();
 
@@ -640,10 +632,6 @@ export default {
   color: #1a73e8; /* 箭头的颜色 */
 }
 
-
-.info.legend.hidden {
-  display: none;
-}
 .info.legend.custom-legend {
   background: rgba(255, 255, 255, 0.9);
   padding: 8px 10px;
