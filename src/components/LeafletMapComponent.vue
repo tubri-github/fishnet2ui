@@ -12,6 +12,7 @@ import {driver} from "driver.js";
 import '@/assets/driver_theme.css';
 import 'driver.js/dist/driver.css';
 import { ElCollapse, ElCollapseItem } from 'element-plus';
+import 'leaflet.gridlayer.googlemutant';
 
 export default {
   name: 'LeafletMapComponent',
@@ -126,9 +127,9 @@ export default {
         const descriptions = ['1', '2 - 10', '11 - 20', '21 - 30', '31+'];
 
         for (let i = 0; i < grades.length; i++) {
-          div.innerHTML +=
+          div.innerHTML  +=
               `<div class="legend-item">
-           <i style="background:${colors[i]};"></i>
+           <i class="fa fa-fish" style="color:${colors[i]}; font-size: 16px;"></i>
            <span>${descriptions[i]}</span>
          </div>`;
         }
@@ -241,8 +242,8 @@ export default {
           // 增加大标题，包含坐标信息
           const popupHeader = h(
               'div',
-              { class: 'popup-header' },
-              `Selected Record [${items[0].Latitude}, ${items[0].Longitude}]`
+              { class: 'popup-header fa fa-map-pin' },
+              ` ${items[0].Latitude},${items[0].Longitude}`
           );
 
           // 将大标题和 collapse 内容结合
@@ -281,8 +282,8 @@ export default {
           // 增加大标题，包含坐标信息
           const popupHeader = h(
               'div',
-              { class: 'popup-header' },
-              `Selected Records [${items[0].Latitude}, ${items[0].Longitude}]`
+              { class: 'popup-header fa fa-map-pin' },
+              ` ${items[0].Latitude}, ${items[0].Longitude}`
           );
           // const container = document.createElement('div');
           const app = createApp({ render: () => h('div', [popupHeader, collapseContent]) });
@@ -302,6 +303,39 @@ export default {
         maxZoom: 18,
         attribution:'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
       }).addTo(map);
+
+      // Add Google Maps layers
+      const googleStreets = L.gridLayer.googleMutant({
+        type: 'roadmap'
+      }).addTo(map);
+
+      const googleSatellite = L.gridLayer.googleMutant({
+        type: 'satellite'
+      });
+
+      const googleHybrid = L.gridLayer.googleMutant({
+        type: 'hybrid'
+      });
+
+      // Add layer control
+      const baseLayers = {
+        "Google Streets": googleStreets,
+        "Google Satellite": googleSatellite,
+        "Google Hybrid": googleHybrid
+      };
+
+      L.control.layers(baseLayers, null, { position: 'topleft' }).addTo(map);
+
+      const customControl = document.querySelector('.leaflet-control-layers-toggle');
+      customControl.innerHTML = '<i class="fa fa-layer-group"></i>'; // 使用 Font Awesome 的图层图标
+      customControl.style.fontSize = '20px'; // 设置图标大小
+      customControl.style.width = '30px'; // 设置控件宽度
+      customControl.style.height = '30px'; // 设置控件高度
+      customControl.style.backgroundColor = 'white'; // 背景颜色
+      customControl.style.display = 'flex'; // 使用 Flexbox 布局
+      customControl.style.alignItems = 'center'; // 垂直居中
+      customControl.style.justifyContent = 'center'; // 水平居中
+      customControl.style.textDecoration = 'none'; // 水平居中
 
 
 
@@ -638,8 +672,8 @@ export default {
   font-size: 12px;
   line-height: 1.2;
   border-radius: 6px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-  border: 1px solid #ccc;
+  /*box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);*/
+  /*border: 1px solid #131313;*/
 }
 
 .legend-item {
@@ -653,7 +687,7 @@ export default {
   width: 18px;
   height: 18px;
   margin-right: 8px;
-  border: 1px solid #ddd;
+  textShadow: 1px 1px 2px #000, -1px -1px 2px #000, 1px -1px 2px #000, -1px 1px 2px #000 ;
   border-radius: 3px;
 }
 
@@ -663,5 +697,60 @@ export default {
   vertical-align: middle;
 }
 
+.leaflet-control-layers-toggle:hover {
+  transform: none; /* 防止放大效果 */
+  width: 30px; /* 确保宽度不变 */
+  height: 30px; /* 确保高度不变 */
+  background-color: white; /* 保持背景色一致 */
+  transition: none; /* 取消动画效果 */
+}
 
+.leaflet-control-layers {
+  background-color: white; /* 保持背景颜色一致 */
+  border-radius: 6px; /* 确保鼠标悬停时边框圆角不变 */
+  border: none;
+
+}
+a.leaflet-control-layers{
+  text-decoration: none;
+}
+
+.leaflet-control-layers-expanded {
+  width: auto; /* 确保展开时宽度自适应内容 */
+  height: auto;
+}
+
+/* 控制整个图层控件的样式 */
+.leaflet-control-layers-list {
+  font-family: Arial, sans-serif; /* 设置字体为更轻量的 Arial */
+  font-size:  0.75rem; /* 调整字体大小 */
+  font-weight: lighter; /* 取消粗体 */
+  color: #484848; /* 字体颜色为深灰色 */
+  line-height: 1; /* 增加行高，使选项之间间距更大 */
+  padding: 2px; /* 控制控件内边距 */
+}
+
+/* 调整选项的对齐 */
+.leaflet-control-layers-list label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* 确保文本和图标靠左对齐 */
+  margin: 6px 0; /* 增加上下间距 */
+}
+
+/* 调整选项图标与文字之间的间距 */
+.leaflet-control-layers-list input[type="radio"] {
+  margin-right: 3px; /* 调整复选框与文字之间的间距 */
+}
+
+/* 修改展开时的控件样式，保持一致性 */
+.leaflet-control-layers-expanded {
+  background-color: #fff;
+  border-radius: 6px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
+  padding: 8px;
+}
+.fa-fish{
+  font-size: 24px;
+}
 </style>

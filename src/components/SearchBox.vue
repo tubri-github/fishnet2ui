@@ -84,7 +84,7 @@
         <a href="https://github.com/tubri/Fishnet2Community/discussions" target="_blank" aria-label="GitHub">
           <i class="fab fa-github"></i>
         </a>
-        <a href="mailto:fishnet2@tulane.edu" target="_blank" aria-hidden="true">
+        <a href="mailto:support@fishnet2.net" target="_blank" aria-hidden="true">
           <i class="fa fa-envelope"></i>
         </a>
       </p>
