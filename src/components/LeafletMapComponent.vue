@@ -328,7 +328,7 @@ export default {
 
       const customControl = document.querySelector('.leaflet-control-layers-toggle');
       customControl.innerHTML = '<i class="fa fa-layer-group"></i>'; // 使用 Font Awesome 的图层图标
-      customControl.style.fontSize = '20px'; // 设置图标大小
+      customControl.style.fontSize = '0.8rem'; // 设置图标大小
       customControl.style.width = '30px'; // 设置控件宽度
       customControl.style.height = '30px'; // 设置控件高度
       customControl.style.backgroundColor = 'white'; // 背景颜色
@@ -696,6 +696,12 @@ export default {
   color: #333;
   vertical-align: middle;
 }
+.leaflet-control-layers-toggle{
+  background-image:none;
+}
+.leaflet-retina .leaflet-control-layers-toggle{
+  background-image:none;
+}
 
 .leaflet-control-layers-toggle:hover {
   transform: none; /* 防止放大效果 */
@@ -714,7 +720,9 @@ export default {
 a.leaflet-control-layers{
   text-decoration: none;
 }
-
+.leaflet-touch .leaflet-control-layers{
+  border:none;
+}
 .leaflet-control-layers-expanded {
   width: auto; /* 确保展开时宽度自适应内容 */
   height: auto;
