@@ -37,4 +37,8 @@ body{
   font-weight: bold;
   font-family: 'Open Sans';
 }
+html, body {
+  min-width: 1024px;
+  overflow-x: auto;
+}
 </style>
