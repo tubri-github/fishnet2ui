@@ -123,13 +123,17 @@ export default {
     },
   },
   setup(props, { emit }) {
+    function fullDecode(value) {
+      if (!value) return '';
+      return decodeURIComponent(value.replace(/\+/g, ' '));
+    }
     const searchFields = ref({
-      t: props.initialQuery.t || '',
-      l: props.initialQuery.l || '',
-      c: props.initialQuery.c || '',
-      d: props.initialQuery.d || '',
-      q: props.initialQuery.q || '',
-      p: props.initialQuery.p || '',
+      t: fullDecode(props.initialQuery.t),
+      l: fullDecode(props.initialQuery.l),
+      c: fullDecode(props.initialQuery.c),
+      d: fullDecode(props.initialQuery.d),
+      q: fullDecode(props.initialQuery.q),
+      p: fullDecode(props.initialQuery.p),
       fmt: 'json',
       num: '20',
     });
