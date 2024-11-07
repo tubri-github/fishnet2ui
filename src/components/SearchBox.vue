@@ -111,6 +111,10 @@ export default {
     polygon: {
       type: String,
       default: ''
+    },
+    initialQuery: {
+      type: Object,
+      default: () => ({})
     }
   },
   methods:{
@@ -120,14 +124,14 @@ export default {
   },
   setup(props, { emit }) {
     const searchFields = ref({
-      t: '',
-      l: '',
-      c: '',
-      d: '',
-      q: '',
-      p: props.polygon,
-      fmt:'json',
-      num:'20',
+      t: props.initialQuery.t || '',
+      l: props.initialQuery.l || '',
+      c: props.initialQuery.c || '',
+      d: props.initialQuery.d || '',
+      q: props.initialQuery.q || '',
+      p: props.initialQuery.p || '',
+      fmt: 'json',
+      num: '20',
     });
 
     const locationFields = ref({
@@ -161,6 +165,9 @@ export default {
     };
     onMounted(async () => {
       document.addEventListener('click', handleClickOutside);
+      if (Object.keys(props.initialQuery).length) {
+        validateAndSearch();
+      }
     });
 
     onBeforeUnmount(() => {

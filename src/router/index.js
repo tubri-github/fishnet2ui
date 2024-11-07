@@ -16,6 +16,12 @@ const routes = [
         component: MapPage,
     },
     {
+        path: '/searchresult',
+        name: 'SearchResultPage',
+        component: MapPage,
+        props: route => ({ query: route.query })
+    },
+    {
         path: '/advanced-search',
         name: 'AdvancedSearchPage',
         component: AdvancedSearchPage,

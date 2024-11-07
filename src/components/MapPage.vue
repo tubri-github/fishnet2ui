@@ -2,7 +2,7 @@
   <div class="map-view">
     <div class="search-area">
 <!--      <search-box @search="toggleSelectedList"/>-->
-      <search-box  @start-tour="startTour" @search="fetchOccurrences" :polygon="polygon"/>
+      <search-box :initialQuery="query"  @start-tour="startTour" @search="fetchOccurrences" :polygon="polygon"/>
     </div>
     <div class="map-area" >
       <leaflet-map-component @polygonDrawn="handlePolygonDrawn"
@@ -55,6 +55,12 @@ export default {
     SearchBox,
     LeafletMapComponent,
     SelectedList
+  },
+  props: {
+    query: {
+      type: Object,
+      default: () => ({})
+    }
   },
   setup() {
     const searchTerm = ref('');
