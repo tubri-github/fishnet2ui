@@ -12,7 +12,7 @@
           <router-link to="/about">FISHNET 2</router-link>
           <router-link to="/datapolicy">DATA POLICIES</router-link>
           <router-link to="/funding">FUNDING</router-link>
-          <a href="#">PARTNER INSTITUTIONS</a>
+          <router-link to="/partners">PARTNER INSTITUTIONS</router-link>
         </div>
       </div>
       <router-link to="/georef">GEOREFERENCING</router-link>

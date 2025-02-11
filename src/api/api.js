@@ -56,4 +56,8 @@ export default {
         const response = await apiClient.get('/providers/', { params });
         return handleResponse(response);
     },
+    async getProvidersList() {
+        const response = await apiClient.get('/providerlist/');
+        return handleResponse(response);
+    },
 };
