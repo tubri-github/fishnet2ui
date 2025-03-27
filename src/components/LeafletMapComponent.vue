@@ -46,6 +46,34 @@ export default {
     let markersLayer;
     let paginationControlInstance;
 
+    const storageUtils = {
+      setWithExpiry(key, value, expiryDays) {
+        const now = new Date();
+        const item = {
+          value: value,
+          expiry: now.getTime() + (expiryDays * 24 * 60 * 60 * 1000)
+        };
+        localStorage.setItem(key, JSON.stringify(item));
+      },
+
+      getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key);
+        if (!itemStr) {
+          return null;
+        }
+
+        const item = JSON.parse(itemStr);
+        const now = new Date();
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key);
+          return null;
+        }
+
+        return item.value;
+      }
+    };
+
     const startTour = () => {
       const driverInstance  = driver({
         popoverClass: 'blue-white-popover',
@@ -114,7 +142,8 @@ export default {
 
 
       driverInstance.drive();
-      localStorage.setItem('hasSeenTableTour', true); // 标记用户已经看过引导
+      // localStorage.setItem('hasSeenTableTour', true); // 标记用户已经看过引导
+      storageUtils.setWithExpiry('hasSeenTableTour1', true, 30);
     };
 
     const addColorLegend = () => {
@@ -444,7 +473,7 @@ export default {
         }
       }
 
-      if (!localStorage.getItem('hasSeenTableTour')) {
+      if (!storageUtils.getWithExpiry('hasSeenTableTour1')) {
         startTour();
       }
     };

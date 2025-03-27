@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import {computed, ref} from 'vue';
+import {computed, ref } from 'vue';
 import { ElLoading } from 'element-plus';
 import api from '@/api/api';
 import debounce from 'lodash/debounce';
@@ -89,6 +89,34 @@ export default {
     //   providers: 'Loading...',
     //   locations: 'Loading...',
     // });
+
+    const storageUtils = {
+      setWithExpiry(key, value, expiryDays) {
+        const now = new Date();
+        const item = {
+          value: value,
+          expiry: now.getTime() + (expiryDays * 24 * 60 * 60 * 1000)
+        };
+        localStorage.setItem(key, JSON.stringify(item));
+      },
+
+      getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key);
+        if (!itemStr) {
+          return null;
+        }
+
+        const item = JSON.parse(itemStr);
+        const now = new Date();
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key);
+          return null;
+        }
+
+        return item.value;
+      }
+    };
 
     const startTour = () => {
       const driverInstance  = driver({
@@ -161,16 +189,17 @@ export default {
 
 
       driverInstance.drive();
-      localStorage.setItem('hasSeenTour', true); // 标记用户已经看过引导
+      // localStorage.setItem('hasSeenTour', true); // 标记用户已经看过引导
+      storageUtils.setWithExpiry('hasSeenTour1', true, 30);
     };
 
+    // Add this onMounted hook if you want to check for the tour on page load
     // onMounted(() => {
-    //   // 页面加载时检查用户是否已经看过引导
-    //   if (!localStorage.getItem('hasSeenTour')) {
+    //   // Check if the user has seen the tour with expiry check
+    //   if (!storageUtils.getWithExpiry('hasSeenTour')) {
     //     startTour();
     //   }
     // });
-
 
     const showSelectedList = ref(false);
     const polygon = ref('');
