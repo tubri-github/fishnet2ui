@@ -146,7 +146,7 @@ export default {
     });
 
     const handleAgreementAccept =() => {
-      emit('start-tour'); // 触发 start-tour 事件
+      // emit('start-tour'); // 触发 start-tour 事件（同意agreement后不再自动显示引导）
     }
     const restartTour = () => {
       emit('start-tour'); // 重新开始 driver.js 引导

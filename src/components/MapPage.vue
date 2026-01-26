@@ -10,7 +10,7 @@
                              :showPaginationButtons="pagination.showedPageInfo"
                              :currentPage="pagination.currentPage"
                              :totalPages="pagination.totalPages"
-                             :resultsPlotted="items.length"
+                             :resultsPlotted="items?.length || 0"
                              @changePage="changePage"/>
 
       <transition name="slide-up">

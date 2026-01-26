@@ -8,9 +8,9 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet-draw/dist/leaflet.draw.css';
 import 'leaflet-draw';
 import {onBeforeUnmount, onMounted, ref, watch,h, createApp} from "vue";
-import {driver} from "driver.js";
-import '@/assets/driver_theme.css';
-import 'driver.js/dist/driver.css';
+// import {driver} from "driver.js";
+// import '@/assets/driver_theme.css';
+// import 'driver.js/dist/driver.css';
 import { ElCollapse, ElCollapseItem } from 'element-plus';
 import 'leaflet.gridlayer.googlemutant';
 
@@ -46,105 +46,105 @@ export default {
     let markersLayer;
     let paginationControlInstance;
 
-    const storageUtils = {
-      setWithExpiry(key, value, expiryDays) {
-        const now = new Date();
-        const item = {
-          value: value,
-          expiry: now.getTime() + (expiryDays * 24 * 60 * 60 * 1000)
-        };
-        localStorage.setItem(key, JSON.stringify(item));
-      },
+    // const storageUtils = {
+    //   setWithExpiry(key, value, expiryDays) {
+    //     const now = new Date();
+    //     const item = {
+    //       value: value,
+    //       expiry: now.getTime() + (expiryDays * 24 * 60 * 60 * 1000)
+    //     };
+    //     localStorage.setItem(key, JSON.stringify(item));
+    //   },
+    //
+    //   getWithExpiry(key) {
+    //     const itemStr = localStorage.getItem(key);
+    //     if (!itemStr) {
+    //       return null;
+    //     }
+    //
+    //     const item = JSON.parse(itemStr);
+    //     const now = new Date();
+    //
+    //     if (now.getTime() > item.expiry) {
+    //       localStorage.removeItem(key);
+    //       return null;
+    //     }
+    //
+    //     return item.value;
+    //   }
+    // };
 
-      getWithExpiry(key) {
-        const itemStr = localStorage.getItem(key);
-        if (!itemStr) {
-          return null;
-        }
-
-        const item = JSON.parse(itemStr);
-        const now = new Date();
-
-        if (now.getTime() > item.expiry) {
-          localStorage.removeItem(key);
-          return null;
-        }
-
-        return item.value;
-      }
-    };
-
-    const startTour = () => {
-      const driverInstance  = driver({
-        popoverClass: 'blue-white-popover',
-        showProgress: false,
-        allowHTML: true,
-        allowClose: false,
-        steps: [
-
-          // Step 3: Viewing Results - 结果展示区域
-          {
-            element: '.selected-list-container',  // 结果展示区域
-            popover: {
-              title: 'Viewing Results',
-              description: 'Your search results will appear below the map area. Let\'s go over the result tabs.',
-              position: 'top'
-            }
-          },
-          {
-            element: '#tab-dataTable',  // Search Results 标签
-            popover: {
-              title: 'Search Results Tab',
-              description: 'This tab shows a listing of specimen records returned by your search.',
-              position: 'top',
-              align:'start'
-            }
-          },
-          {
-            element: '#tab-otherData',  // Taxon 标签
-            popover: {
-              title: 'Taxon Tab',
-              description: 'Taxon -summary listing the number of records found for each taxon in your result set. A link to the Encyclopedia of Life is also provided for each taxon, making it easy to get further information (general description, life history, photos etc.) about a particular species',
-              position: 'top',
-              align:'start'
-            }
-          },
-          {
-            element: '#tab-additionalInfo',  // Providers & Citation 标签
-            popover: {
-              title: 'Providers & Citation Tab',
-              description: 'Providers & Citation -summary listing the number of records found for each data provider in your result set along with a generated citation.',
-              position: 'top',
-              align:'start'
-            }
-          },
-          {
-            element: '#tab-extraInfo',  // Location 标签
-            popover: {
-              title: 'Location Tab',
-              description: 'This tab summarizes the number of records found for unique locations in your result set.',
-              position: 'top',
-              align:'start'
-            }
-          },
-          // Step 4: Downloading/Mapping Results - 下载和映射结果
-          {
-            element: '.download-options',  // 下载链接区域
-            popover: {
-              title: 'Downloading/Mapping Results',
-              description: 'You can download the full dataset for the selected tab (Search Results, Taxon, Providers or Location) in either comma separated value (CSV) or tab delimited text (TXT) format. If your query results contain mappable geographic coordinates, the Search Results tab will also contain a Keyhole Markup Language (KML) format in addition to the CSV and TXT links. KML files can be visualized in Google Earth as well as many newer GIS programs',
-              position: 'top',
-              align:'start'
-            }
-          }
-        ]
-      });
-
-
-      driverInstance.drive();
-      // localStorage.setItem('hasSeenTableTour', true); // 标记用户已经看过引导
-      storageUtils.setWithExpiry('hasSeenTableTour1', true, 30);
-    };
+    // const startTour = () => {
+    //   const driverInstance  = driver({
+    //     popoverClass: 'blue-white-popover',
+    //     showProgress: false,
+    //     allowHTML: true,
+    //     allowClose: false,
+    //     steps: [
+    //
+    //       // Step 3: Viewing Results - 结果展示区域
+    //       {
+    //         element: '.selected-list-container',  // 结果展示区域
+    //         popover: {
+    //           title: 'Viewing Results',
+    //           description: 'Your search results will appear below the map area. Let\'s go over the result tabs.',
+    //           position: 'top'
+    //         }
+    //       },
+    //       {
+    //         element: '#tab-dataTable',  // Search Results 标签
+    //         popover: {
+    //           title: 'Search Results Tab',
+    //           description: 'This tab shows a listing of specimen records returned by your search.',
+    //           position: 'top',
+    //           align:'start'
+    //         }
+    //       },
+    //       {
+    //         element: '#tab-otherData',  // Taxon 标签
+    //         popover: {
+    //           title: 'Taxon Tab',
+    //           description: 'Taxon -summary listing the number of records found for each taxon in your result set. A link to the Encyclopedia of Life is also provided for each taxon, making it easy to get further information (general description, life history, photos etc.) about a particular species',
+    //           position: 'top',
+    //           align:'start'
+    //         }
+    //       },
+    //       {
+    //         element: '#tab-additionalInfo',  // Providers & Citation 标签
+    //         popover: {
+    //           title: 'Providers & Citation Tab',
+    //           description: 'Providers & Citation -summary listing the number of records found for each data provider in your result set along with a generated citation.',
+    //           position: 'top',
+    //           align:'start'
+    //         }
+    //       },
+    //       {
+    //         element: '#tab-extraInfo',  // Location 标签
+    //         popover: {
+    //           title: 'Location Tab',
+    //           description: 'This tab summarizes the number of records found for unique locations in your result set.',
+    //           position: 'top',
+    //           align:'start'
+    //         }
+    //       },
+    //       // Step 4: Downloading/Mapping Results - 下载和映射结果
+    //       {
+    //         element: '.download-options',  // 下载链接区域
+    //         popover: {
+    //           title: 'Downloading/Mapping Results',
+    //           description: 'You can download the full dataset for the selected tab (Search Results, Taxon, Providers or Location) in either comma separated value (CSV) or tab delimited text (TXT) format. If your query results contain mappable geographic coordinates, the Search Results tab will also contain a Keyhole Markup Language (KML) format in addition to the CSV and TXT links. KML files can be visualized in Google Earth as well as many newer GIS programs',
+    //           position: 'top',
+    //           align:'start'
+    //         }
+    //       }
+    //     ]
+    //   });
+    //
+    //
+    //   driverInstance.drive();
+    //   // localStorage.setItem('hasSeenTableTour', true); // 标记用户已经看过引导
+    //   storageUtils.setWithExpiry('hasSeenTableTour1', true, 30);
+    // };
 
     const addColorLegend = () => {
       const legend = L.control({ position: 'topright' });
@@ -473,9 +473,9 @@ export default {
         }
       }
 
-      if (!storageUtils.getWithExpiry('hasSeenTableTour1')) {
-        startTour();
-      }
+      // if (!storageUtils.getWithExpiry('hasSeenTableTour1')) {
+      //   startTour();
+      // } // 同意agreement后不再自动显示引导，仅保留手动触发
     };
 
     watch([() => props.showPaginationButtons,() => props.currentPage, () => props.totalPages, () => props.resultsPlotted], () => {
