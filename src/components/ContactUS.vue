@@ -63,6 +63,7 @@ export default {
         title: "Information Coordinator, Primary Contact",
         institution: "Tulane University",
         email: "rewa@tulane.edu",
+        phone: "",
         image: new URL('@/assets/profile/who.jpg', import.meta.url).href // 假设你有图片
       },
       {
