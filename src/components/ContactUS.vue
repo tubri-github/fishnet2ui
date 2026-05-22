@@ -59,12 +59,11 @@ export default {
         image: new URL('@/assets/profile/xiaojun.jpg', import.meta.url).href // 假设你有图片
       },
       {
-        name: "Shannon B Cruz",
+        name: "Roseline Ewa",
         title: "Information Coordinator, Primary Contact",
         institution: "Tulane University",
-        email: "scruz2@tulane.edu",
-        phone: "504.394.1711",
-        image: new URL('@/assets/profile/shannon.jpg', import.meta.url).href // 假设你有图片
+        email: "rewa@tulane.edu",
+        image: new URL('@/assets/profile/who.jpg', import.meta.url).href // 假设你有图片
       },
       {
         name: "Ed Wiley",
