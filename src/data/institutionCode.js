@@ -3,6 +3,7 @@ export const institutionCodes = [
   { code: "AM", label: "Australian Museum" },
   { code: "ANSP", label: "Academy of Natural Sciences at Philidelphia" },
   { code: "AUM", label: "Auburn University Museum of Natural History" },
+  { code: "APSU", label: "Austin Peay State University Fish Specimens" },
   { code: "BPBM", label: "Bernice Pauahi Bishop Museum, Department of Natural Sciences" },
   { code: "CAS", label: "California Academy of Sciences" },
   { code: "CBM", label: "Natural History Museum and Institute, Chiba" },
